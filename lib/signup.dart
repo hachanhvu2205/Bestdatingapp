@@ -1,3 +1,4 @@
+import 'package:Bestdatingapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -119,6 +120,11 @@ class _SignUpPageState extends State<SignUpPage> {
       child: RaisedButton(
         onPressed: () async {
           await AuthService.signUp(emailController.text, passController.text);
+          
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Main()),
+              (route) => false);
         },
         color: Colors.purple,
         padding: EdgeInsets.symmetric(vertical: 16),
