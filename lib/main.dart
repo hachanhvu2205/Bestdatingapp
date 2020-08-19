@@ -1,4 +1,7 @@
+import 'package:Bestdatingapp/chat.dart';
 import 'package:Bestdatingapp/login.dart';
+import 'package:Bestdatingapp/messsage.dart';
+import 'package:Bestdatingapp/setting.dart';
 import 'package:Bestdatingapp/swipe.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LogInPage(),
+      home: Main(),
     );
   }
 }
@@ -44,8 +47,12 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
+    return buildSwipePage(context);
+  }
+
+  DefaultTabController buildSwipePage(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         body: Column(
           children: <Widget>[
@@ -64,19 +71,13 @@ class _MainState extends State<Main> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 50),
                     child: Tab(
-                      icon: Icon(FontAwesomeIcons.starOfLife),
+                      icon: Icon(FontAwesomeIcons.speakap),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 50),
                     child: Tab(
-                      icon: Icon(FontAwesomeIcons.fire),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 50),
-                    child: Tab(
-                      icon: Icon(FontAwesomeIcons.fire),
+                      icon: Icon(FontAwesomeIcons.portrait),
                     ),
                   ),
                 ],
@@ -87,9 +88,8 @@ class _MainState extends State<Main> {
                 physics: NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   SwipePage(),
-                  Text('data'),
-                  Text('data'),
-                  Text('data'),
+                  MessagePage(),
+                  SettingPage(),
                 ],
               ),
             )
