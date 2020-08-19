@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "901976480161",
+    "firebase_url": "https://dateforfate.firebaseio.com",
+    "project_id": "dateforfate",
+    "storage_bucket": "dateforfate.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901976480161:android:dd51d190ac97f086a253e0",
+        "android_client_info": {
+          "package_name": "com.example.Bestdatingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901976480161-gjc78f18hm351unq3qa16qhnpr9ap06i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZHXDtcRorIlEJsjNPFEaWfS5BwL1VtPI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901976480161-gjc78f18hm351unq3qa16qhnpr9ap06i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
