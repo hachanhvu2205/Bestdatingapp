@@ -7,32 +7,8 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  User currentUser = new User(
-    id: '1',
-    name: 'Tung',
-    age: 19,
-    idLiked: ['2', '3'],
-  );
-  List<User> matchedUsers = [
-    User(
-      id: '1',
-      name: 'Tung',
-      age: 19,
-      idLiked: ['2', '3'],
-    ),
-    User(
-      id: '2',
-      name: 'Ngoc',
-      age: 20,
-      idLiked: ['3'],
-    ),
-    User(
-      id: '3',
-      name: 'Hoa',
-      age: 20,
-      idLiked: ['1'],
-    ),
-  ];
+  User currentUser = new User();
+  List<User> matchedUsers = [];
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -53,7 +29,10 @@ class _MessagePageState extends State<MessagePage> {
                   margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
                   height: 100,
                   width: 400,
-                  decoration: BoxDecoration(color: Colors.red[300], borderRadius: BorderRadius.circular(16),),
+                  decoration: BoxDecoration(
+                    color: Colors.red[300],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: Container(
                     alignment: Alignment.center,
                     child: Column(
