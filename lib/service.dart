@@ -13,10 +13,12 @@ class AuthService {
   }
 
   static Future<FirebaseUser> signUp(String email, String password) async {
+    AuthResult result = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    FirebaseUser user = result.user;
+
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = result.user;
+      await user.sendEmailVerification();
       return user;
     } catch (e) {
       print(e.toString());

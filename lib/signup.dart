@@ -12,9 +12,12 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final AuthService _auth = AuthService();
+
+  final formKey = new GlobalKey<FormState>();
+  String _email;
+  String _password;
+  String _confirmPassword;
   bool value = false;
-  TextEditingController emailController = TextEditingController(text: '');
-  TextEditingController passController = TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,6 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Form(
+              key: formKey,
               child: Column(
                 children: <Widget>[
                   email(),
@@ -118,14 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 16, 40, 20),
       child: RaisedButton(
-        onPressed: () async {
-          await AuthService.signUp(emailController.text, passController.text);
-          
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Main()),
-              (route) => false);
-        },
+        onPressed: validationAndRegister,
         color: Colors.purple,
         padding: EdgeInsets.symmetric(vertical: 16),
         child: Text(
@@ -165,8 +162,11 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
       child: TextFormField(
-        validator: (value) =>
-            value.isEmpty ? 'confirm password must not be empty' : null,
+        validator: (value) {
+          value.isEmpty ? 'confirm password must not be empty' : null;
+          _confirmPassword == _password ? 'Password does not match' : null;
+        },
+        onSaved: (value) => _confirmPassword = value,
         obscureText: true,
         decoration: InputDecoration(
           hintText: 'Confirm Password',
@@ -183,9 +183,18 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
       child: TextFormField(
-        controller: passController,
-        validator: (value) =>
-            value.isEmpty ? 'Password must not be empty' : null,
+        validator: (value) {
+          value.isEmpty ? 'Password must not be empty' : null;
+
+          Pattern pattern =
+              r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,10}$';
+          RegExp regex = new RegExp(pattern);
+          if (!regex.hasMatch(value))
+            return 'Invalid password';
+          else
+            return null;
+        },
+        onSaved: (value) => _password = value,
         obscureText: true,
         decoration: new InputDecoration(
           hintText: 'Password',
@@ -202,8 +211,11 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
       child: TextFormField(
-        controller: emailController,
-        validator: (value) => value.isEmpty ? 'Email must not be empty' : null,
+        validator: (value) {
+          value.isEmpty ? 'Email must not be empty' : Null;
+          validateEmail(value) ? null : "Invalid email address";
+        },
+        onSaved: (value) => _email = value,
         decoration: InputDecoration(
           hintText: 'Email',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
@@ -213,5 +225,37 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    return (!regex.hasMatch(value)) ? false : true;
+  }
+
+  bool validation() {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  void validationAndRegister() async {
+    if (validation()) {
+      try {
+        FirebaseUser user = await AuthService.signUp(_email, _password);
+        if (user.isEmailVerified == true) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Main()),
+              (route) => false);
+        }
+      } catch (e) {
+        print('$e');
+      }
+    }
   }
 }
