@@ -186,8 +186,7 @@ class _SignUpPageState extends State<SignUpPage> {
         validator: (value) {
           value.isEmpty ? 'Password must not be empty' : null;
 
-          Pattern pattern =
-              r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,10}$';
+          Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$';
           RegExp regex = new RegExp(pattern);
           if (!regex.hasMatch(value))
             return 'Invalid password';
