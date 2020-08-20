@@ -1,7 +1,7 @@
 import 'package:Bestdatingapp/chat.dart';
 import 'package:Bestdatingapp/login.dart';
 import 'package:Bestdatingapp/messsage.dart';
-import 'package:Bestdatingapp/setting.dart';
+import 'package:Bestdatingapp/profile.dart';
 import 'package:Bestdatingapp/swipe.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,10 +16,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LogInPage(),
+      home: Main(),
     );
   }
 }
@@ -46,7 +46,7 @@ class _MainState extends State<Main> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.15,
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Colors.red[300]),
               child: TabBar(
                 tabs: <Widget>[
                   Padding(

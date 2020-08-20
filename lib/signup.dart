@@ -186,12 +186,12 @@ class _SignUpPageState extends State<SignUpPage> {
         validator: (value) {
           value.isEmpty ? 'Password must not be empty' : null;
 
-          Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$';
-          RegExp regex = new RegExp(pattern);
-          if (!regex.hasMatch(value))
-            return 'Invalid password';
-          else
-            return null;
+          // Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$';
+          // RegExp regex = new RegExp(pattern);
+          // if (!regex.hasMatch(value))
+          //   return 'Invalid password';
+          // else
+          //   return null;
         },
         onSaved: (value) => _password = value,
         obscureText: true,
@@ -246,11 +246,9 @@ class _SignUpPageState extends State<SignUpPage> {
     if (validation()) {
       try {
         FirebaseUser user = await AuthService.signUp(_email, _password);
-        if (user.isEmailVerified == true) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Main()),
-              (route) => false);
+        if (user != null) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LogInPage(),),);
         }
       } catch (e) {
         print('$e');
