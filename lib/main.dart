@@ -3,6 +3,7 @@ import 'package:Bestdatingapp/login.dart';
 import 'package:Bestdatingapp/messsage.dart';
 import 'package:Bestdatingapp/profile.dart';
 import 'package:Bestdatingapp/swipe.dart';
+import 'package:Bestdatingapp/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Main(),
+      home: LogInPage(),
     );
   }
 }

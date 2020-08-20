@@ -1,5 +1,6 @@
 import 'package:Bestdatingapp/main.dart';
 import 'package:Bestdatingapp/signup.dart';
+import 'package:Bestdatingapp/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -85,7 +86,7 @@ class _LogInPageState extends State<LogInPage> {
         if (user != null) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Main()),
+            MaterialPageRoute(builder: (context) => UpdateInfoPage()),
           );
         }
       } catch (e) {

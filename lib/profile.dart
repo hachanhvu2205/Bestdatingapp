@@ -1,3 +1,4 @@
+import 'package:Bestdatingapp/info.dart';
 import 'package:Bestdatingapp/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -115,11 +116,18 @@ class _SettingPageState extends State<SettingPage> {
                             Column(
                               children: <Widget>[
                                 ClipOval(
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    color: Colors.grey[300],
-                                    child: Icon(FontAwesomeIcons.pen),
+                                  child: GestureDetector(
+                                    onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InfoPage())),
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      color: Colors.grey[300],
+                                      child: Icon(FontAwesomeIcons.pen),
+                                    ),
                                   ),
                                 ),
                                 SizedBox(
