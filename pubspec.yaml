@@ -21,6 +21,9 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  fluttertoast: ^7.0.2
+  intl: ^0.16.1
+  photo_view: ^0.10.1
   flutter:
     sdk: flutter
   font_awesome_flutter: ^8.8.1
@@ -33,6 +36,9 @@ dependencies:
   firebase_storage: ^3.1.6
   cloud_firestore: ^0.13.7
   email_validator: '^1.0.0'
+  image_picker: ^0.6.7+4
+  
+  shared_preferences: ^0.5.8
   auth: ^6.0.3
   
 dev_dependencies:

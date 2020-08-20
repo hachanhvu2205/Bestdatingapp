@@ -1,6 +1,6 @@
-import 'package:Bestdatingapp/chat.dart';
+import 'package:Bestdatingapp/chat/chat.dart';
 import 'package:Bestdatingapp/login.dart';
-import 'package:Bestdatingapp/messsage.dart';
+import 'package:Bestdatingapp/chat/listlike.dart';
 import 'package:Bestdatingapp/setting.dart';
 import 'package:Bestdatingapp/swipe.dart';
 import 'package:flutter/material.dart';

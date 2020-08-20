@@ -1,4 +1,4 @@
-import 'package:Bestdatingapp/chat.dart';
+import 'package:Bestdatingapp/chat/chat.dart';
 import 'package:flutter/material.dart';
 
 class MessagePage extends StatefulWidget {
