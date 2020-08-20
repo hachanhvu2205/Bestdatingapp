@@ -13,7 +13,8 @@ class _SwipePageState extends State<SwipePage> {
   var controller;
   bool isLiked = false;
   int currentIndex;
-  User currentUser = new User(id: '12345', age: 19, bio: 'bio', name: 'Tung');
+  User currentUser = new User(
+      id: '12345', age: 19, bio: 'bio', name: 'Tung', idLiked: ['2', '3']);
   List<Profile> profiles = [
     Profile(
       photos: 'assets/asset-3.jpg',
@@ -93,7 +94,10 @@ class _SwipePageState extends State<SwipePage> {
                 setState(() {
                   isLiked = !isLiked;
                   if (isLiked == true) {
-                    currentUser.idLiked.add('${profiles[currentIndex].name}');
+                    if (!currentUser.idLiked
+                        .contains('${profiles[currentIndex].name}')) {
+                      currentUser.idLiked.add('${profiles[currentIndex].name}');
+                    }
                   }
                 });
               },

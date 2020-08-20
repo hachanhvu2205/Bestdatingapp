@@ -1,3 +1,4 @@
+import 'package:Bestdatingapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -182,15 +183,8 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
       child: TextFormField(
-        validator: (value) {
-          value.isEmpty ? 'Password must not be empty' : null;
-
-          // Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$';
-          // RegExp regex = new RegExp(pattern);
-          // if (!regex.hasMatch(value))
-          //   return 'Invalid password';
-          // else
-          //   return null;
+        validator: (val) {
+          return val.length < 6 ? "Enter Password 6+ characters" : null;
         },
         onSaved: (value) => _password = value,
         obscureText: true,
@@ -245,6 +239,14 @@ class _SignUpPageState extends State<SignUpPage> {
     if (validation()) {
       try {
         FirebaseUser user = await AuthService.signUp(_email, _password);
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LogInPage(),
+            ),
+          );
+        }
       } catch (e) {
         print('$e');
       }

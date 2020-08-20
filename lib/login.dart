@@ -1,4 +1,6 @@
+import 'package:Bestdatingapp/main.dart';
 import 'package:Bestdatingapp/signup.dart';
+import 'package:Bestdatingapp/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +19,7 @@ class _LogInPageState extends State<LogInPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -80,6 +83,12 @@ class _LogInPageState extends State<LogInPage> {
         FirebaseUser user = (await FirebaseAuth.instance
                 .signInWithEmailAndPassword(email: _email, password: _password))
             .user;
+        if (user != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UpdateInfoPage()),
+          );
+        }
       } catch (e) {
         print('$e');
       }

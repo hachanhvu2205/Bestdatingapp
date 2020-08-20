@@ -31,4 +31,13 @@ class AuthService {
 
   static Stream<FirebaseUser> get FirebaseUserStream =>
       _auth.onAuthStateChanged;
+
+  Future resetPass(String email) async {
+    try {
+      return await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 }

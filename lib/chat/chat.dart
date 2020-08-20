@@ -125,7 +125,7 @@ class _ChatPageState extends State<ChatPage> {
                   maxWidth: MediaQuery.of(context).size.width * 0.5),
               margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.red[300],
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Align(
