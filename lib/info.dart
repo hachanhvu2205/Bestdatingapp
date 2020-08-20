@@ -24,6 +24,7 @@ class _InfoPageState extends State<InfoPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width * 0.8,
@@ -51,6 +52,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                 ),
                 Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width * 0.8,
@@ -78,6 +80,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                 ),
                 Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width * 0.8,
@@ -89,15 +92,18 @@ class _InfoPageState extends State<InfoPage> {
                         style: TextStyle(color: Colors.red[300]),
                       ),
                       Form(
-                        child: TextFormField(
-                          controller: ageController,
-                          onFieldSubmitted: (value) {
-                            print(bioController.text);
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Age...',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5)),
+                        child: Container(
+                          child: TextFormField(
+                            
+                            controller: ageController,
+                            onFieldSubmitted: (value) {
+                              print(bioController.text);
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Age...',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                            ),
                           ),
                         ),
                       ),
