@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Bestdatingapp/service.dart';
 import 'package:Bestdatingapp/login.dart';
+import 'package:Bestdatingapp/chat/database.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -11,8 +12,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final AuthService _auth = AuthService();
-
+  final AuthService authService = AuthService();
+  DatabaseMethods databaseMethods = new DatabaseMethods();
+  bool isLoading = false;
   final formKey = new GlobalKey<FormState>();
   String _email;
   String _password;
@@ -238,15 +240,20 @@ class _SignUpPageState extends State<SignUpPage> {
   void validationAndRegister() async {
     if (validation()) {
       try {
-        FirebaseUser user = await AuthService.signUp(_email, _password);
-        if (user != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LogInPage(),
-            ),
-          );
-        }
+        await authService.signUp(_email, _password).then((value) {
+          if (value != null) {
+            Map<String, String> userDataMap = {
+              "userEmail": _email,
+            };
+            databaseMethods.addUserInfo(userDataMap);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LogInPage(),
+              ),
+            );
+          }
+        });
       } catch (e) {
         print('$e');
       }
