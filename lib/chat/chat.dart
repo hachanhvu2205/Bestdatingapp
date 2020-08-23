@@ -51,6 +51,7 @@ class _ChatPageState extends State<ChatPage> {
         child: Container(
           child: Column(
             children: <Widget>[
+              
               Container(
                 alignment: Alignment.center,
                 height: MediaQuery.of(context).size.height * 0.8,

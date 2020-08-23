@@ -1,9 +1,9 @@
 import 'package:Bestdatingapp/chat/chat.dart';
-import 'package:Bestdatingapp/login.dart';
+import 'package:Bestdatingapp/signin/login.dart';
 import 'package:Bestdatingapp/chat/listlike.dart';
-import 'package:Bestdatingapp/profile.dart';
+import 'package:Bestdatingapp/profile/profile.dart';
 import 'package:Bestdatingapp/swipe.dart';
-import 'package:Bestdatingapp/updateInfo.dart';
+import 'package:Bestdatingapp/signin/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';

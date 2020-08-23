@@ -11,44 +11,61 @@ class _MessagePageState extends State<MessagePage> {
   List<User> matchedUsers = [];
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  height: 100,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    color: Colors.red[300],
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: <Widget>[
-                        Text('${matchedUsers[index].name}'),
-                        Text('${matchedUsers[index].age}'),
-                      ],
-                    ),
-                  ),
-                ),
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
+          child: TextFormField(
+            decoration: InputDecoration(
+              hintText: 'Email',
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+              prefixIcon: Icon(
+                Icons.email,
               ),
-            ],
+            ),
           ),
-        );
-      },
-      itemCount: matchedUsers.length,
+        ),
+        ListView.builder(
+          itemBuilder: (context, index) {
+            return Container(
+              child: Column(
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                      height: 100,
+                      width: 400,
+                      decoration: BoxDecoration(
+                        color: Colors.red[300],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: <Widget>[
+                            Text('${matchedUsers[index].name}'),
+                            Text('${matchedUsers[index].age}'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          itemCount: matchedUsers.length,
+        ),
+      ],
     );
   }
 }
