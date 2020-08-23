@@ -12,20 +12,7 @@ class _MessagePageState extends State<MessagePage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
-          child: TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Email',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-              prefixIcon: Icon(
-                Icons.email,
-              ),
-            ),
-          ),
-        ),
+      children: [        
         ListView.builder(
           itemBuilder: (context, index) {
             return Container(

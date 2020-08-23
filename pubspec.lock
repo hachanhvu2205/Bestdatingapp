@@ -14,7 +14,7 @@ packages:
       name: auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.3"
+    version: "6.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -85,6 +85,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+<<<<<<< HEAD
   equatable:
     dependency: transitive
     description:
@@ -92,6 +93,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.3"
+=======
+>>>>>>> 5c882063cb6ca7c6b19a20ac82d3ef331a036bd3
   fake_async:
     dependency: transitive
     description:
@@ -499,4 +502,8 @@ packages:
     version: "0.1.0"
 sdks:
   dart: ">=2.9.0-14.0.dev <3.0.0"
+<<<<<<< HEAD
   flutter: ">=1.12.13+hotfix.6 <2.0.0"
+=======
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+>>>>>>> 5c882063cb6ca7c6b19a20ac82d3ef331a036bd3

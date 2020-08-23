@@ -1,3 +1,4 @@
+import 'package:Bestdatingapp/profile/addMedia.dart';
 import 'package:Bestdatingapp/profile/info.dart';
 import 'package:Bestdatingapp/profile/settings.dart';
 import 'package:flutter/material.dart';
@@ -79,14 +80,23 @@ class _SettingPageState extends State<SettingPage> {
                               children: <Widget>[
                                 Stack(
                                   children: <Widget>[
-                                    ClipOval(
-                                      child: Container(
-                                        height: 75,
-                                        width: 75,
-                                        color: Colors.red[300],
-                                        child: Icon(
-                                          FontAwesomeIcons.camera,
-                                          color: Colors.white,
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => MediaPage(),
+                                            ));
+                                      },
+                                      child: ClipOval(
+                                        child: Container(
+                                          height: 75,
+                                          width: 75,
+                                          color: Colors.red[300],
+                                          child: Icon(
+                                            FontAwesomeIcons.camera,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -118,10 +128,9 @@ class _SettingPageState extends State<SettingPage> {
                                 ClipOval(
                                   child: GestureDetector(
                                     onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InfoPage())),
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => InfoPage())),
                                     child: Container(
                                       height: 50,
                                       width: 50,
