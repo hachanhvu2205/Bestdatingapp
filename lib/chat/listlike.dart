@@ -1,5 +1,9 @@
 import 'package:Bestdatingapp/chat/chat.dart';
+import 'package:Bestdatingapp/login.dart';
 import 'package:flutter/material.dart';
+import 'package:Bestdatingapp/service.dart';
+import 'package:Bestdatingapp/chat/search.dart';
+import 'package:Bestdatingapp/chat/const.dart';
 
 class MessagePage extends StatefulWidget {
   @override
@@ -7,57 +11,94 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  User currentUser = new User();
-  List<User> matchedUsers = [];
+  Stream chatRooms;
+
+  Widget chatRoomsList() {
+    return StreamBuilder(
+      stream: chatRooms,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Conversation(
+                    userName: snapshot.data.documents[index].data['chatRoomId']
+                        .toString()
+                        .replaceAll("_", "")
+                        .replaceAll(Constants.myName, ""),
+                    chatRoomId:
+                        snapshot.data.documents[index].data["chatRoomId"],
+                  );
+                })
+            : Container();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  height: 100,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    color: Colors.red[300],
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: <Widget>[
-                        Text('${matchedUsers[index].name}'),
-                        Text('${matchedUsers[index].age}'),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      itemCount: matchedUsers.length,
+    return Scaffold(
+      body: Container(
+        child: chatRoomsList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.search),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Search()));
+        },
+      ),
     );
   }
 }
 
-class User {
-  String id;
-  int age;
-  String bio;
-  String name;
-  List<String> idLiked;
-  User({this.id, this.age, this.bio, this.name, this.idLiked});
+class Conversation extends StatelessWidget {
+  final String userName;
+  final String chatRoomId;
+  Conversation({this.userName, @required this.chatRoomId});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatPage(
+                      chatRoomId: chatRoomId,
+                    )));
+      },
+      child: Container(
+        color: Colors.black26,
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Row(
+          children: [
+            Container(
+              height: 30,
+              width: 30,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(30)),
+              child: Text(userName.substring(0, 1),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'OverpassRegular',
+                      fontWeight: FontWeight.w300)),
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            Text(userName,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'OverpassRegular',
+                    fontWeight: FontWeight.w300))
+          ],
+        ),
+      ),
+    );
+  }
 }

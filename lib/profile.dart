@@ -3,12 +3,12 @@ import 'package:Bestdatingapp/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SettingPage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  _SettingPageState createState() => _SettingPageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,10 +118,9 @@ class _SettingPageState extends State<SettingPage> {
                                 ClipOval(
                                   child: GestureDetector(
                                     onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InfoPage())),
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => InfoPage())),
                                     child: Container(
                                       height: 50,
                                       width: 50,
