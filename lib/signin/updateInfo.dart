@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:Bestdatingapp/main.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:io';
 
 class UpdateInfoPage extends StatefulWidget {
   @override
@@ -12,6 +15,17 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   TextEditingController imageController = TextEditingController();
   var genderValue = -1;
   var gender;
+  File _image;
+  final picker = ImagePicker();
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+  }
+
   getGender(genderValue) {
     if (genderValue == 0) {
       return 'Male';
@@ -26,6 +40,39 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
       child: Scaffold(
         body: Column(
           children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                getImage();
+              },
+              child: Container(
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Center(
+                  child: Stack(
+                    children: [
+                      ClipOval(
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          child: Image.asset('assets/asset-1.jpg'),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: ClipOval(
+                          child: Container(
+                            width: 25,
+                            height: 25,
+                            color: Colors.white,
+                            child: Icon(FontAwesomeIcons.plus),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
             // update name
             Container(
               margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -117,31 +164,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Add image',
-                    style: TextStyle(color: Colors.red[300]),
-                  ),
-                  Form(
-                    child: TextFormField(
-                      controller: imageController,
-                      onFieldSubmitted: (value) {},
-                      decoration: InputDecoration(
-                        hintText: 'Image...',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+
             RaisedButton(
               onPressed: () {
                 Navigator.push(
