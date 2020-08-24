@@ -94,7 +94,6 @@ class _InfoPageState extends State<InfoPage> {
                       Form(
                         child: Container(
                           child: TextFormField(
-                            
                             controller: ageController,
                             onFieldSubmitted: (value) {
                               print(bioController.text);

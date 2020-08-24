@@ -1,7 +1,5 @@
 import 'package:Bestdatingapp/chat/chat.dart';
-import 'package:Bestdatingapp/login.dart';
 import 'package:flutter/material.dart';
-import 'package:Bestdatingapp/service.dart';
 import 'package:Bestdatingapp/chat/search.dart';
 import 'package:Bestdatingapp/chat/const.dart';
 
@@ -23,9 +21,9 @@ class _MessagePageState extends State<MessagePage> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return Conversation(
-                    userName: snapshot.data.documents[index].data['chatRoomId']
+                    userEmail: snapshot.data.documents[index].data['chatRoomId']
                         .toString()
-                        .replaceAll("_", "")
+                        .replaceAll("_", '')
                         .replaceAll(Constants.myName, ""),
                     chatRoomId:
                         snapshot.data.documents[index].data["chatRoomId"],
@@ -54,9 +52,9 @@ class _MessagePageState extends State<MessagePage> {
 }
 
 class Conversation extends StatelessWidget {
-  final String userName;
+  final String userEmail;
   final String chatRoomId;
-  Conversation({this.userName, @required this.chatRoomId});
+  Conversation({this.userEmail, @required this.chatRoomId});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -78,7 +76,7 @@ class Conversation extends StatelessWidget {
               width: 30,
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(30)),
-              child: Text(userName.substring(0, 1),
+              child: Text(userEmail.substring(0, 1),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white,
@@ -89,7 +87,7 @@ class Conversation extends StatelessWidget {
             SizedBox(
               width: 12,
             ),
-            Text(userName,
+            Text(userEmail,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                     color: Colors.white,

@@ -1,3 +1,5 @@
+import 'package:Bestdatingapp/service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -6,9 +8,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  var selectedAgeRange = RangeValues(18.0, 23.0);
-  var value = 0.0;
+  static var selectedAgeRange = RangeValues(18.0, 23.0);
+  static var value = 50.0;
   var genderValue = -1;
+
+  getDistanceValue(value) {
+    return value;
+  }
+
+  getLowerAgeValue(value) {
+    return value;
+  }
+
+  getHigherAgeValue(value) {
+    return value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -80,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        'Gender',
+                        'Show me\nGender',
                         style: TextStyle(color: Colors.red[300]),
                       ),
                       Row(
@@ -92,7 +107,6 @@ class _SettingsPageState extends State<SettingsPage> {
                               setState(() {
                                 genderValue = value;
                               });
-                              
                             },
                           ),
                           Text('Male'),
@@ -103,13 +117,24 @@ class _SettingsPageState extends State<SettingsPage> {
                               setState(() {
                                 genderValue = value;
                               });
-                              
                             },
                           ),
                           Text('Female'),
                         ],
-                      )
+                      ),
                     ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 50,
+                  child: FlatButton(
+                    onPressed: () async {
+                      print('Logged out');
+                    },
+                    child: Text('Log Out'),
                   ),
                 ),
               ],

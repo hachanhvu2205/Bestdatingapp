@@ -1,9 +1,10 @@
 import 'package:Bestdatingapp/main.dart';
+import 'package:Bestdatingapp/profile/profile.dart';
+import 'package:Bestdatingapp/signin/login.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Bestdatingapp/service.dart';
-import 'package:Bestdatingapp/login.dart';
 import 'package:Bestdatingapp/chat/database.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -53,9 +54,15 @@ class _SignUpPageState extends State<SignUpPage> {
               textAlign: TextAlign.center,
             ),
             socialMedia(),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Text('Already a member? Log in'),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()));
+              },
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text('Already a member? Log in'),
+              ),
             )
           ],
         ),
@@ -82,10 +89,6 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.google),
-                  Text(
-                    'Google',
-                    style: TextStyle(color: Colors.blue[400]),
-                  ),
                 ],
               ),
             ),
@@ -98,20 +101,10 @@ class _SignUpPageState extends State<SignUpPage> {
             child: FlatButton(
               onPressed: () {},
               color: Colors.white,
-              shape:
-                  RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey, width: 1)),
               child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Image.network(
-                      'https://is2-ssl.mzstatic.com/image/thumb/Purple114/v4/24/12/20/2412205b-b0fc-28ba-dd35-992aa9f2b430/Icon-Production-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.png',
-                      height: 10,
-                      width: 10,
-                    ),
-                  ),
-                  Text('Facebook'),
-                ],
+                children: <Widget>[Icon(FontAwesomeIcons.facebook)],
               ),
             ),
           ),
@@ -125,7 +118,7 @@ class _SignUpPageState extends State<SignUpPage> {
       margin: EdgeInsets.fromLTRB(40, 16, 40, 20),
       child: RaisedButton(
         onPressed: validationAndRegister,
-        color: Colors.purple,
+        color: Colors.red[300],
         padding: EdgeInsets.symmetric(vertical: 16),
         child: Text(
           'Register',

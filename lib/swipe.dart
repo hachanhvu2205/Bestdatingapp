@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SwipePage extends StatefulWidget {
   @override
@@ -13,6 +14,13 @@ class _SwipePageState extends State<SwipePage> {
   var controller;
   bool isLiked = false;
   int currentIndex;
+  static Position position;
+  static getPosition() async {
+    return position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position);
+  }
+
   User currentUser = new User(
       id: '12345', age: 19, bio: 'bio', name: 'Tung', idLiked: ['2', '3']);
   List<Profile> profiles = [
@@ -66,7 +74,7 @@ class _SwipePageState extends State<SwipePage> {
                       alignment: Alignment.bottomLeft,
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        '${profiles[index].name}\n${profiles[index].bio}',
+                        '${profiles[index].name}\n${profiles[index].bio}}',
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     )
@@ -113,8 +121,8 @@ class Profile {
   final String photos;
   final String name;
   final String bio;
-
-  Profile({this.photos, this.name, this.bio});
+  Position location;
+  Profile({this.photos, this.name, this.bio, this.location});
 }
 
 class User {
@@ -123,5 +131,6 @@ class User {
   String bio;
   String name;
   List<String> idLiked;
-  User({this.id, this.age, this.bio, this.name, this.idLiked});
+  Position location;
+  User({this.id, this.age, this.bio, this.name, this.idLiked, this.location});
 }
