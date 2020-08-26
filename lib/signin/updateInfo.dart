@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:Bestdatingapp/main.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
@@ -20,12 +23,20 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   final picker = ImagePicker();
   Position position;
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
+  getImage(ImageSource source) async {
+    File image = await ImagePicker.pickImage(source: source);
     setState(() {
-      _image = File(pickedFile.path);
+      _image = image;
     });
+    uploadPic();
+  }
+
+  Future uploadPic() async {
+    String fileName = 'images/${DateTime.now()}.png';
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
   }
 
   getGender(genderValue) {
@@ -63,7 +74,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
           children: <Widget>[
             GestureDetector(
               onTap: () {
-                getImage();
+                getImage(ImageSource.gallery);
               },
               child: Container(
                 margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -72,10 +83,12 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                     children: [
                       ClipOval(
                         child: Container(
-                          height: 100,
-                          width: 100,
-                          child: Image.asset('assets/asset-1.jpg'),
-                        ),
+                            height: 100,
+                            width: 100,
+                            child: Image.asset(
+                              'assets/asset-1.jpg',
+                              fit: BoxFit.fill,
+                            )),
                       ),
                       Positioned(
                         bottom: 0,
@@ -85,7 +98,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                             width: 25,
                             height: 25,
                             color: Colors.white,
-                            child: Icon(FontAwesomeIcons.plus),
+                            child: Icon(FontAwesomeIcons.camera),
                           ),
                         ),
                       )
@@ -197,6 +210,133 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Container nameSetting(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      color: Colors.white,
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Add name',
+            style: TextStyle(color: Colors.red[300]),
+          ),
+          Form(
+            child: TextFormField(
+              controller: nameController,
+              onFieldSubmitted: (value) {},
+              decoration: InputDecoration(
+                hintText: 'Name...',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container ageSetting(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      color: Colors.white,
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Add age',
+            style: TextStyle(color: Colors.red[300]),
+          ),
+          Form(
+            child: TextFormField(
+              controller: ageController,
+              onFieldSubmitted: (value) {},
+              decoration: InputDecoration(
+                hintText: 'Age...',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container genderSetting(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      color: Colors.white,
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Choose gender',
+            style: TextStyle(color: Colors.red[300]),
+          ),
+          Row(
+            children: <Widget>[
+              Radio(
+                value: 0,
+                groupValue: genderValue,
+                onChanged: (value) {
+                  setState(() {
+                    genderValue = value;
+                    getGender(genderValue);
+                  });
+                },
+              ),
+              Text('Male'),
+              Radio(
+                value: 1,
+                groupValue: genderValue,
+                onChanged: (value) {
+                  setState(() {
+                    genderValue = value;
+                    getGender(genderValue);
+                  });
+                },
+              ),
+              Text('Female'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container image(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      color: Colors.white,
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Add image',
+            style: TextStyle(color: Colors.red[300]),
+          ),
+          Form(
+            child: TextFormField(
+              controller: imageController,
+              onFieldSubmitted: (value) {},
+              decoration: InputDecoration(
+                hintText: 'Image...',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

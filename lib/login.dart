@@ -1,30 +1,29 @@
 import 'package:Bestdatingapp/main.dart';
-import 'package:Bestdatingapp/profile/profile.dart';
-import 'package:Bestdatingapp/signin/login.dart';
+import 'package:Bestdatingapp/signin/signup.dart';
+import 'package:Bestdatingapp/signin/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Bestdatingapp/service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Bestdatingapp/chat/database.dart';
 
-class SignUpPage extends StatefulWidget {
+class LogInPage extends StatefulWidget {
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _LogInPageState createState() => _LogInPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final AuthService authService = AuthService();
-  DatabaseMethods databaseMethods = new DatabaseMethods();
-  bool isLoading = false;
+class _LogInPageState extends State<LogInPage> {
   final formKey = new GlobalKey<FormState>();
+  AuthService authService = new AuthService();
   String _email;
   String _password;
-  String _confirmPassword;
   bool value = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -43,9 +42,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 children: <Widget>[
                   email(),
                   password(),
-                  confirmPassword(),
                   rememberMe(),
-                  register(),
+                  login(),
                 ],
               ),
             ),
@@ -54,20 +52,50 @@ class _SignUpPageState extends State<SignUpPage> {
               textAlign: TextAlign.center,
             ),
             socialMedia(),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()));
+            InkWell(
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignUpPage(),
+                  ),
+                )
               },
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text('Already a member? Log in'),
+                child: Text('Not a member? Sign up now'),
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  bool validation() {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  void validationAndSubmit() async {
+    if (validation()) {
+      await authService
+          .signInWithEmailAndPassword(_email, _password)
+          .then((result) async {
+        if (result != null) {
+          QuerySnapshot userInfoSnapshot =
+              await DatabaseMethods().getUserInfo(_email);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UpdateInfoPage()),
+          );
+        }
+      });
+    }
   }
 
   Expanded socialMedia() {
@@ -89,6 +117,10 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.google),
+                  Text(
+                    'Google',
+                    style: TextStyle(color: Colors.blue[400]),
+                  ),
                 ],
               ),
             ),
@@ -101,10 +133,20 @@ class _SignUpPageState extends State<SignUpPage> {
             child: FlatButton(
               onPressed: () {},
               color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.grey, width: 1)),
+              shape:
+                  RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
               child: Row(
-                children: <Widget>[Icon(FontAwesomeIcons.facebook)],
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Image.network(
+                      'https://is2-ssl.mzstatic.com/image/thumb/Purple114/v4/24/12/20/2412205b-b0fc-28ba-dd35-992aa9f2b430/Icon-Production-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.png',
+                      height: 10,
+                      width: 10,
+                    ),
+                  ),
+                  Text('Facebook'),
+                ],
               ),
             ),
           ),
@@ -113,15 +155,15 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Container register() {
+  Container login() {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 16, 40, 20),
       child: RaisedButton(
-        onPressed: validationAndRegister,
-        color: Colors.red[300],
+        onPressed: validationAndSubmit,
+        color: Colors.purple,
         padding: EdgeInsets.symmetric(vertical: 16),
         child: Text(
-          'Register',
+          'Login',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
@@ -153,37 +195,14 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Container confirmPassword() {
-    return Container(
-      margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
-      child: TextFormField(
-        validator: (value) {
-          value.isEmpty ? 'confirm password must not be empty' : null;
-          _confirmPassword == _password ? 'Password does not match' : null;
-        },
-        onSaved: (value) => _confirmPassword = value,
-        obscureText: true,
-        decoration: InputDecoration(
-          hintText: 'Confirm Password',
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-          prefixIcon: Icon(
-            Icons.lock,
-          ),
-        ),
-      ),
-    );
-  }
-
   Container password() {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
       child: TextFormField(
-        validator: (val) {
-          return val.length < 6 ? "Enter Password 6+ characters" : null;
-        },
-        onSaved: (value) => _password = value,
         obscureText: true,
-        decoration: new InputDecoration(
+        validator: (value) => value.isEmpty ? 'Password must be filled' : null,
+        onSaved: (value) => _password = value,
+        decoration: InputDecoration(
           hintText: 'Password',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
           prefixIcon: Icon(
@@ -198,10 +217,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
       child: TextFormField(
-        validator: (value) {
-          value.isEmpty ? 'Email must not be empty' : Null;
-          validateEmail(value) ? null : "Invalid email address";
-        },
+        validator: (value) => value.isEmpty ? 'Email must be filled' : null,
         onSaved: (value) => _email = value,
         decoration: InputDecoration(
           hintText: 'Email',
@@ -212,44 +228,5 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-  }
-
-  bool validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    return (!regex.hasMatch(value)) ? false : true;
-  }
-
-  bool validation() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  void validationAndRegister() async {
-    if (validation()) {
-      try {
-        await authService.signUp(_email, _password).then((value) {
-          if (value != null) {
-            Map<String, String> userDataMap = {
-              "userEmail": _email,
-            };
-            databaseMethods.addUserInfo(userDataMap);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LogInPage(),
-              ),
-            );
-          }
-        });
-      } catch (e) {
-        print('$e');
-      }
-    }
   }
 }

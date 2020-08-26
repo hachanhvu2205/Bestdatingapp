@@ -1,4 +1,3 @@
-import 'package:Bestdatingapp/profile/addMedia.dart';
 import 'package:Bestdatingapp/profile/info.dart';
 import 'package:Bestdatingapp/profile/settings.dart';
 import 'package:flutter/material.dart';
@@ -80,23 +79,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: <Widget>[
                                 Stack(
                                   children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => MediaPage(),
-                                            ));
-                                      },
-                                      child: ClipOval(
-                                        child: Container(
-                                          height: 75,
-                                          width: 75,
-                                          color: Colors.red[300],
-                                          child: Icon(
-                                            FontAwesomeIcons.camera,
-                                            color: Colors.white,
-                                          ),
+                                    ClipOval(
+                                      child: Container(
+                                        height: 75,
+                                        width: 75,
+                                        color: Colors.red[300],
+                                        child: Icon(
+                                          FontAwesomeIcons.camera,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),

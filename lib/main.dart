@@ -7,6 +7,7 @@ import 'package:Bestdatingapp/signin/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:Bestdatingapp/profile/settings.dart';
 
 void main() {
   runApp(MyApp());
@@ -78,7 +79,7 @@ class _MainState extends State<Main> {
                 children: <Widget>[
                   SwipePage(),
                   MessagePage(),
-                  SettingPage(),
+                  ProfilePage(),
                 ],
               ),
             )
