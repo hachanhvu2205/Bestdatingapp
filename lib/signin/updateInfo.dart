@@ -1,3 +1,4 @@
+import 'package:Bestdatingapp/signin/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -50,13 +51,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   getPosition() async {
     position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(position);
-  }
-
-  getDistance(Position position1, Position position2) async {
-    double distance;
-    return distance = await Geolocator().distanceBetween(position1.latitude,
-        position1.longitude, position2.latitude, position2.longitude);
+    print(position.latitude);
   }
 
   @override
@@ -119,6 +114,9 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                     'Add name',
                     style: TextStyle(color: Colors.red[300]),
                   ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   Form(
                     child: TextFormField(
                       controller: nameController,
@@ -143,6 +141,9 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                   Text(
                     'Add age',
                     style: TextStyle(color: Colors.red[300]),
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   Form(
                     child: TextFormField(
@@ -203,7 +204,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Main()),
+                  MaterialPageRoute(builder: (context) => LogInPage()),
                 );
               },
               child: Text('Submit'),

@@ -74,7 +74,7 @@ class _SwipePageState extends State<SwipePage> {
                       alignment: Alignment.bottomLeft,
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        '${profiles[index].name}\n${profiles[index].bio}}',
+                        '${profiles[index].name}\n${profiles[index].bio}',
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                     )

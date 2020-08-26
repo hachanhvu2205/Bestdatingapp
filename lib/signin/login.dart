@@ -91,7 +91,7 @@ class _LogInPageState extends State<LogInPage> {
               await DatabaseMethods().getUserInfo(_email);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UpdateInfoPage()),
+            MaterialPageRoute(builder: (context) => Main()),
           );
         }
       });

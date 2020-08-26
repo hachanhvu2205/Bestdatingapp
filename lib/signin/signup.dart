@@ -1,6 +1,7 @@
 import 'package:Bestdatingapp/main.dart';
 import 'package:Bestdatingapp/profile/profile.dart';
 import 'package:Bestdatingapp/signin/login.dart';
+import 'package:Bestdatingapp/signin/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -237,12 +238,13 @@ class _SignUpPageState extends State<SignUpPage> {
           if (value != null) {
             Map<String, String> userDataMap = {
               "userEmail": _email,
+
             };
             databaseMethods.addUserInfo(userDataMap);
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => LogInPage(),
+                builder: (context) => UpdateInfoPage(),
               ),
             );
           }
