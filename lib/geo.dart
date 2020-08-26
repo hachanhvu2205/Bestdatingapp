@@ -15,6 +15,12 @@ class _GeoPositionState extends State<GeoPosition> {
     print(position);
   }
 
+  getDistance(Position position1, Position position2) async {
+    double distance;
+    return distance = await Geolocator().distanceBetween(position1.latitude,
+        position1.longitude, position2.latitude, position2.longitude);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

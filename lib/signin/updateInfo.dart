@@ -3,6 +3,7 @@ import 'package:Bestdatingapp/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
 
 class UpdateInfoPage extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   var gender;
   File _image;
   final picker = ImagePicker();
+  Position position;
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -32,6 +34,25 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
     } else if (genderValue == 1) {
       return 'Female';
     }
+  }
+
+  getPosition() async {
+    position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position);
+  }
+
+  getDistance(Position position1, Position position2) async {
+    double distance;
+    return distance = await Geolocator().distanceBetween(position1.latitude,
+        position1.longitude, position2.latitude, position2.longitude);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getPosition();
+    super.initState();
   }
 
   @override
