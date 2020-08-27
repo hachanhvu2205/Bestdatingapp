@@ -101,6 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         style: TextStyle(color: Colors.red[300]),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Radio(
                             value: 0,
@@ -112,6 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             },
                           ),
                           Text('Male'),
+                          SizedBox(width: 100,),
                           Radio(
                             value: 1,
                             groupValue: genderValue,

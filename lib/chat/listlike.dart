@@ -29,7 +29,11 @@ class _MessagePageState extends State<MessagePage> {
                         snapshot.data.documents[index].data["chatRoomId"],
                   );
                 })
-            : Container();
+            : Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red[300]),
+                ),
+              );
       },
     );
   }

@@ -65,6 +65,9 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Upload Info'),
+        ),
         body: Column(
           children: <Widget>[
             GestureDetector(
@@ -112,10 +115,10 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                 children: <Widget>[
                   Text(
                     'Add name',
-                    style: TextStyle(color: Colors.red[300]),
+                    style: TextStyle(color: Colors.red[300], fontSize: 16),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 10,
                   ),
                   Form(
                     child: TextFormField(

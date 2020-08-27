@@ -42,6 +42,9 @@ class _SwipePageState extends State<SwipePage> {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
+          SizedBox(
+            height: 30,
+          ),
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width,
@@ -53,32 +56,35 @@ class _SwipePageState extends State<SwipePage> {
               stackNum: 3,
               swipeEdge: 4.0,
               maxWidth: MediaQuery.of(context).size.width * 0.9,
-              maxHeight: MediaQuery.of(context).size.width * 0.9,
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
               minWidth: MediaQuery.of(context).size.width * 0.8,
-              minHeight: MediaQuery.of(context).size.width * 0.8,
+              minHeight: MediaQuery.of(context).size.height * 0.8,
               cardBuilder: (context, index) {
                 currentIndex = index;
-                return Stack(
-                  children: <Widget>[
-                    Container(
-                      width: 500,
-                      height: 500,
-                      child: Card(
-                        child: Image.asset(
-                          '${profiles[index].photos}',
-                          fit: BoxFit.fitHeight,
+                return Container(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        width: 500,
+                        height: 500,
+                        child: Card(
+                          child: Image.asset(
+                            '${profiles[index].photos}',
+                            fit: BoxFit.fitHeight,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomLeft,
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        '${profiles[index].name}\n${profiles[index].bio}',
-                        style: TextStyle(color: Colors.white, fontSize: 30),
-                      ),
-                    )
-                  ],
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          '${profiles[index].name}\n${profiles[index].bio}',
+                          style: TextStyle(color: Colors.white, fontSize: 30),
+                        ),
+                      )
+                    ],
+                  ),
                 );
               },
               cardController: controller = CardController(),
@@ -97,20 +103,34 @@ class _SwipePageState extends State<SwipePage> {
               },
             ),
           ),
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  isLiked = !isLiked;
-                  if (isLiked == true) {
-                    if (!currentUser.idLiked
-                        .contains('${profiles[currentIndex].name}')) {
-                      currentUser.idLiked.add('${profiles[currentIndex].name}');
-                    }
-                  }
-                });
-              },
-              icon: Icon(FontAwesomeIcons.solidHeart),
-              color: isLiked ? Colors.red : Colors.black)
+          SizedBox(
+            height: 20,
+          ),
+          RaisedButton(
+            shape: CircleBorder(),
+            onPressed: () {},
+            child: Ink(
+              decoration: ShapeDecoration(
+                color: Colors.red[300],
+                shape: CircleBorder(),
+              ),
+              child: IconButton(
+                  constraints: BoxConstraints(
+                    minHeight: 75,
+                    minWidth: 75,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isLiked = !isLiked;
+                    });
+                  },
+                  icon: Icon(
+                    FontAwesomeIcons.solidHeart,
+                    size: 30,
+                  ),
+                  color: isLiked ? Colors.red : Colors.black),
+            ),
+          ),
         ],
       ),
     );
