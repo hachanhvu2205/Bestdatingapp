@@ -108,7 +108,35 @@ class _InfoPageState extends State<InfoPage> {
                       ),
                     ],
                   ),
-                )
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 100,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Change gender',
+                        style: TextStyle(color: Colors.red[300]),
+                      ),
+                      Form(
+                        child: TextFormField(
+                          controller: bioController,
+                          onFieldSubmitted: (value) {
+                            print(bioController.text);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Gender...',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

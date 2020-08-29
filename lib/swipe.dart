@@ -13,6 +13,7 @@ class SwipePage extends StatefulWidget {
 class _SwipePageState extends State<SwipePage> {
   var controller;
   bool isLiked = false;
+  bool isNope = false;
   int currentIndex;
   static Position position;
   static getPosition() async {
@@ -20,6 +21,8 @@ class _SwipePageState extends State<SwipePage> {
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position);
   }
+
+  CardController cardController = CardController();
 
   User currentUser = new User(
       id: '12345', age: 19, bio: 'bio', name: 'Tung', idLiked: ['2', '3']);
@@ -35,6 +38,11 @@ class _SwipePageState extends State<SwipePage> {
       bio: 'my bio',
     )
   ];
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +70,8 @@ class _SwipePageState extends State<SwipePage> {
               cardBuilder: (context, index) {
                 currentIndex = index;
                 return Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(16)),
                   child: Stack(
                     children: <Widget>[
                       Container(
@@ -80,14 +89,15 @@ class _SwipePageState extends State<SwipePage> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           '${profiles[index].name}\n${profiles[index].bio}',
-                          style: TextStyle(color: Colors.white, fontSize: 30),
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 40),
                         ),
                       )
                     ],
                   ),
                 );
               },
-              cardController: controller = CardController(),
+              cardController: cardController,
               swipeUpdateCallback:
                   (DragUpdateDetails details, Alignment align) {
                 /// Get swiping card's alignment
@@ -106,30 +116,60 @@ class _SwipePageState extends State<SwipePage> {
           SizedBox(
             height: 20,
           ),
-          RaisedButton(
-            shape: CircleBorder(),
-            onPressed: () {},
-            child: Ink(
-              decoration: ShapeDecoration(
-                color: Colors.red[300],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              RaisedButton(
                 shape: CircleBorder(),
+                onPressed: () {},
+                child: Ink(
+                  decoration: ShapeDecoration(
+                    color: Colors.red[300],
+                    shape: CircleBorder(),
+                  ),
+                  child: IconButton(
+                      constraints: BoxConstraints(
+                        minHeight: 75,
+                        minWidth: 75,
+                      ),
+                      onPressed: () {
+                        cardController.triggerLeft();
+                        currentIndex = currentIndex + 1;
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.times,
+                        size: 30,
+                      ),
+                      color: Colors.black),
+                ),
               ),
-              child: IconButton(
-                  constraints: BoxConstraints(
-                    minHeight: 75,
-                    minWidth: 75,
+              RaisedButton(
+                shape: CircleBorder(),
+                onPressed: () {},
+                child: Ink(
+                  decoration: ShapeDecoration(
+                    color: Colors.red[300],
+                    shape: CircleBorder(),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      isLiked = !isLiked;
-                    });
-                  },
-                  icon: Icon(
-                    FontAwesomeIcons.solidHeart,
-                    size: 30,
-                  ),
-                  color: isLiked ? Colors.red : Colors.black),
-            ),
+                  child: IconButton(
+                      constraints: BoxConstraints(
+                        minHeight: 75,
+                        minWidth: 75,
+                      ),
+                      onPressed: () {
+                        cardController.triggerRight();
+                        currentIndex = currentIndex + 1;
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.solidHeart,
+                        size: 30,
+                      ),
+                      color: Colors.black),
+                ),
+              ),
+            ],
           ),
         ],
       ),
