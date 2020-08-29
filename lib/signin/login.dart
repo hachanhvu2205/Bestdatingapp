@@ -1,9 +1,7 @@
 import 'package:Bestdatingapp/main.dart';
 import 'package:Bestdatingapp/signin/signup.dart';
-import 'package:Bestdatingapp/signin/updateInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Bestdatingapp/service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Bestdatingapp/chat/database.dart';
@@ -24,49 +22,57 @@ class _LogInPageState extends State<LogInPage> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(50),
-                child: Text(
-                  'LOGIN',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(50),
+                    child: Text(
+                      'LOGIN',
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Form(
-              key: formKey,
-              child: Column(
-                children: <Widget>[
-                  email(),
-                  password(),
-                  rememberMe(),
-                  login(),
-                ],
-              ),
-            ),
-            Text(
-              'Or login with',
-              textAlign: TextAlign.center,
-            ),
-            socialMedia(),
-            InkWell(
-              onTap: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SignUpPage(),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: <Widget>[
+                      email(),
+                      password(),
+                      rememberMe(),
+                      login(),
+                    ],
+                  ),
+                ),
+                Text(
+                  'Or login with',
+                  textAlign: TextAlign.center,
+                ),
+                socialMedia(),
+                SizedBox(
+                  height: 75,
+                ),
+                InkWell(
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignUpPage(),
+                      ),
+                    )
+                  },
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text('Not a member? Sign up now'),
                   ),
                 )
-              },
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text('Not a member? Sign up now'),
-              ),
-            )
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -98,49 +104,44 @@ class _LogInPageState extends State<LogInPage> {
     }
   }
 
-  Expanded socialMedia() {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
-            child: FlatButton(
-              onPressed: () {},
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.grey, width: 1)),
-              child: Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.google),
-                  
-                ],
-              ),
+  Widget socialMedia() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+          child: FlatButton(
+            onPressed: () {},
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey, width: 1)),
+            child: Row(
+              children: <Widget>[
+                Icon(FontAwesomeIcons.google),
+              ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
-            child: FlatButton(
-              onPressed: () {},
-              color: Colors.white,
-              shape:
-                  RoundedRectangleBorder(side: BorderSide(color: Colors.grey, width: 1)),
-              child: Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.facebook)
-                ],
-              ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+          child: FlatButton(
+            onPressed: () {},
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey, width: 1)),
+            child: Row(
+              children: <Widget>[Icon(FontAwesomeIcons.facebook)],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

@@ -72,24 +72,27 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('Upload Info'),
         ),
-        body: Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                getImage(ImageSource.gallery);
-              },
-              child: imageSetting(),
-            ),
-            // update name
-            nameSetting(context),
-            ageSetting(context),
-            genderSetting(context),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  getImage(ImageSource.gallery);
+                },
+                child: imageSetting(),
+              ),
+              // update name
+              nameSetting(context),
+              ageSetting(context),
+              genderSetting(context),
 
-            submitSetting(context),
-          ],
+              submitSetting(context),
+            ],
+          ),
         ),
       ),
     );
@@ -102,7 +105,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
         //   "userName": nameController.text,
         // };
         var data = {
-          "userName": nameController.text,
+          'userName': nameController.text,
           "userAge": ageController.text,
           "userGender": getGender(genderValue),
         };
