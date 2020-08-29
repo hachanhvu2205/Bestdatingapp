@@ -1,9 +1,9 @@
 import 'package:Bestdatingapp/main.dart';
 import 'package:Bestdatingapp/signin/signup.dart';
-import 'package:Bestdatingapp/signin/updateInfo.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:Bestdatingapp/service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Bestdatingapp/chat/database.dart';
@@ -117,7 +117,6 @@ class _LogInPageState extends State<LogInPage> {
               child: Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.google),
-                  
                 ],
               ),
             ),
@@ -130,12 +129,10 @@ class _LogInPageState extends State<LogInPage> {
             child: FlatButton(
               onPressed: () {},
               color: Colors.white,
-              shape:
-                  RoundedRectangleBorder(side: BorderSide(color: Colors.grey, width: 1)),
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey, width: 1)),
               child: Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.facebook)
-                ],
+                children: <Widget>[Icon(FontAwesomeIcons.facebook)],
               ),
             ),
           ),

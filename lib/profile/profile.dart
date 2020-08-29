@@ -3,6 +3,8 @@ import 'package:Bestdatingapp/profile/info.dart';
 import 'package:Bestdatingapp/profile/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -10,6 +12,31 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String name = '';
+  int age;
+
+  void getInfo() async {
+    var user = await FirebaseAuth.instance.currentUser();
+    var userQuery = Firestore.instance
+        .collection('Users')
+        .where('e-mail', isEqualTo: '$user.email');
+
+    userQuery.getDocuments().then((data) {
+      if (data.documents.length > 0) {
+        setState(() {
+          name = data.documents[0].data['userName'];
+          age = data.documents[0].data['userAge'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    getInfo();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +63,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Image.asset('assets/asset-1.jpg'),
                           ),
                         ),
-                        Text(
-                          'Tung, 19',
-                          style: TextStyle(fontSize: 20),
-                        ),
                         SizedBox(
                           height: 50,
                         ),
+                        Text(name),
                         Row(
                           children: <Widget>[
                             SizedBox(

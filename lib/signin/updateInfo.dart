@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:Bestdatingapp/main.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
 import 'package:Bestdatingapp/chat/database.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UpdateInfoPage extends StatefulWidget {
   @override
@@ -15,16 +17,25 @@ class UpdateInfoPage extends StatefulWidget {
 
 class _UpdateInfoPageState extends State<UpdateInfoPage> {
   TextEditingController nameController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
   TextEditingController imageController = TextEditingController();
   DatabaseMethods databaseMethods = new DatabaseMethods();
   var genderValue = -1;
+  var likeValue = -1;
   var gender;
   File _image;
-  String _uploadFireUrl;
+  String _uploadFireUrl, interestedIn;
   final picker = ImagePicker();
   DocumentSnapshot _currentDocument;
   Position position;
+  DateTime birthday;
+  GeoPoint location;
+
+  _getLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    location = GeoPoint(position.latitude, position.longitude);
+  }
 
   getImage(ImageSource source) async {
     PickedFile image = await picker.getImage(source: source);
@@ -55,16 +66,18 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
     }
   }
 
-  getPosition() async {
-    position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(position.latitude);
+  getInteretedIn(likeValue) {
+    if (likeValue == 0) {
+      return 'Male';
+    } else if (likeValue == 1) {
+      return 'Female';
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    getPosition();
+    _getLocation();
     super.initState();
   }
 
@@ -72,9 +85,6 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Upload Info'),
-        ),
         body: Column(
           children: <Widget>[
             GestureDetector(
@@ -85,9 +95,32 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
             ),
             // update name
             nameSetting(context),
-            ageSetting(context),
-            genderSetting(context),
 
+            GestureDetector(
+              onTap: () {
+                DatePicker.showDatePicker(
+                  context,
+                  showTitleActions: true,
+                  minTime: DateTime(1900, 1, 1),
+                  maxTime: DateTime.now().subtract(Duration(days: 6939)),
+                  onConfirm: (date) {
+                    setState(() {
+                      birthday = date;
+                    });
+                  },
+                );
+              },
+              child: Container(
+                child: Text(
+                  "Enter Birthday",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+            genderSetting(context),
+            interestedInSetting(context),
             submitSetting(context),
           ],
         ),
@@ -97,14 +130,16 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
 
   RaisedButton submitSetting(BuildContext context) {
     return RaisedButton(
-      onPressed: () {
-        // Map<String, String> data = {
-        //   "userName": nameController.text,
-        // };
+      onPressed: () async {
+        var userId = await databaseMethods.getid();
         var data = {
           "userName": nameController.text,
-          "userAge": ageController.text,
-          "userGender": getGender(genderValue),
+          "userAge": birthday,
+          "userGender": gender,
+          "userId": userId,
+          "location": location,
+          "image": _uploadFireUrl,
+          "interested in": interestedIn,
         };
         databaseMethods.update(data);
         Navigator.push(
@@ -137,6 +172,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                   setState(() {
                     genderValue = value;
                     getGender(genderValue);
+                    gender = getGender(genderValue);
                   });
                 },
               ),
@@ -148,6 +184,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                   setState(() {
                     genderValue = value;
                     getGender(genderValue);
+                    gender = getGender(genderValue);
                   });
                 },
               ),
@@ -159,7 +196,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
     );
   }
 
-  Container ageSetting(BuildContext context) {
+  Container interestedInSetting(BuildContext context) {
     return Container(
       margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
       color: Colors.white,
@@ -168,19 +205,36 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
       child: Column(
         children: <Widget>[
           Text(
-            'Add age',
+            'Interested In',
             style: TextStyle(color: Colors.red[300]),
           ),
-          Form(
-            child: TextFormField(
-              controller: ageController,
-              onFieldSubmitted: (value) {},
-              decoration: InputDecoration(
-                hintText: 'Age...',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+          Row(
+            children: <Widget>[
+              Radio(
+                value: 0,
+                groupValue: likeValue,
+                onChanged: (value) {
+                  setState(() {
+                    likeValue = value;
+                    getInteretedIn(likeValue);
+                    interestedIn = getInteretedIn(likeValue);
+                  });
+                },
               ),
-            ),
+              Text('Male'),
+              Radio(
+                value: 1,
+                groupValue: likeValue,
+                onChanged: (value) {
+                  setState(() {
+                    likeValue = value;
+                    getInteretedIn(likeValue);
+                    interestedIn = getInteretedIn(likeValue);
+                  });
+                },
+              ),
+              Text('Female'),
+            ],
           ),
         ],
       ),

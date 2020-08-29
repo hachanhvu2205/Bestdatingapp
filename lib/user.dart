@@ -1,4 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 class User {
-  final String uid;
-  User({this.uid});
+  String uid;
+  String name;
+  String gender;
+  String interestedIn;
+  String photo;
+  Timestamp age;
+  GeoPoint location;
+
+  User(
+      {this.uid,
+      this.name,
+      this.gender,
+      this.interestedIn,
+      this.photo,
+      this.age,
+      this.location});
 }

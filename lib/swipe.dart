@@ -62,7 +62,8 @@ class _SwipePageState extends State<SwipePage> {
               cardBuilder: (context, index) {
                 currentIndex = index;
                 return Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(16)),
                   child: Stack(
                     children: <Widget>[
                       Container(

@@ -238,7 +238,6 @@ class _SignUpPageState extends State<SignUpPage> {
           if (value != null) {
             Map<String, String> userDataMap = {
               "userEmail": _email,
-
             };
             databaseMethods.addUserInfo(userDataMap);
             Navigator.push(
