@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 class SettingsPage extends StatefulWidget {
-
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -30,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('Settings'),
         ),
@@ -113,7 +113,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             },
                           ),
                           Text('Male'),
-                          SizedBox(width: 100,),
+                          SizedBox(
+                            width: 100,
+                          ),
                           Radio(
                             value: 1,
                             groupValue: genderValue,
@@ -149,4 +151,3 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-

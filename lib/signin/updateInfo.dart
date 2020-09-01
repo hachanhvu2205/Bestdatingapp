@@ -27,7 +27,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   final picker = ImagePicker();
   DocumentSnapshot _currentDocument;
   Position position;
-  DateTime birthday;
+  Timestamp birthday;
   GeoPoint location;
 
   _getLocation() async {
@@ -105,7 +105,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
                   maxTime: DateTime.now().subtract(Duration(days: 6939)),
                   onConfirm: (date) {
                     setState(() {
-                      birthday = date;
+                      birthday = Timestamp.fromDate(date);
                     });
                   },
                 );
@@ -139,7 +139,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
           "userId": userId,
           "location": location,
           "image": _uploadFireUrl,
-          "interested in": interestedIn,
+          "interestedIn": interestedIn,
         };
         databaseMethods.update(data);
         Navigator.push(

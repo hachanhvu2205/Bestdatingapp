@@ -26,91 +26,92 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(50),
-                child: Text(
-                  'LOGIN',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(50),
+                  child: Text(
+                    'LOGIN',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-            Form(
-              key: formKey,
-              child: Column(
-                children: <Widget>[
-                  email(),
-                  password(),
-                  confirmPassword(),
-                  rememberMe(),
-                  register(),
-                ],
+              Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    email(),
+                    password(),
+                    confirmPassword(),
+                    rememberMe(),
+                    register(),
+                  ],
+                ),
               ),
-            ),
-            Text(
-              'Or login with',
-              textAlign: TextAlign.center,
-            ),
-            socialMedia(),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()));
-              },
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text('Already a member? Log in'),
+              Text(
+                'Or login with',
+                textAlign: TextAlign.center,
               ),
-            )
-          ],
+              socialMedia(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProfilePage()));
+                },
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text('Already a member? Log in'),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Expanded socialMedia() {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
-            child: FlatButton(
-              onPressed: () {},
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.grey, width: 1)),
-              child: Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.google),
-                ],
-              ),
+  Widget socialMedia() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+          child: FlatButton(
+            onPressed: () {},
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey, width: 1)),
+            child: Row(
+              children: <Widget>[
+                Icon(FontAwesomeIcons.google),
+              ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
-            child: FlatButton(
-              onPressed: () {},
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.grey, width: 1)),
-              child: Row(
-                children: <Widget>[Icon(FontAwesomeIcons.facebook)],
-              ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+          child: FlatButton(
+            onPressed: () {},
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.grey, width: 1)),
+            child: Row(
+              children: <Widget>[Icon(FontAwesomeIcons.facebook)],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
