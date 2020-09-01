@@ -5,6 +5,8 @@ import 'package:auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Bestdatingapp/signin/updateInfo.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -13,20 +15,28 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  var auth = FirebaseAuth.instance;
-  var uid;
-  var data;
-  void getName() async {
-    final FirebaseUser user = await auth.currentUser();
-    uid = user.displayName;
-    data = await Firestore.instance.collection('users').document(uid);
-    print(data);
+  String name = '';
+  Timestamp age;
+
+  void getInfo() async {
+    var user = await FirebaseAuth.instance.currentUser();
+    await Firestore.instance
+        .collection("users")
+        .where("userEmail", isEqualTo: user.email)
+        .getDocuments()
+        .then((value) {
+      setState(() {
+        name = value.documents[0].data["userName"];
+        age = value.documents[0].data['userAge'];
+      });
+    });
+
+    print('name: ${name}');
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-    getName();
+    getInfo();
     super.initState();
   }
 
@@ -61,8 +71,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           Text(
-                            'Tung, 19',
-                            style: TextStyle(fontSize: 20),
+                            name +
+                                "," +
+                                (DateTime.now().year - age.toDate().year)
+                                    .toString(),
+                            style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                           SizedBox(
                             height: 40,
