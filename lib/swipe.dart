@@ -21,7 +21,7 @@ class _SwipePageState extends State<SwipePage> {
   bool isNope = false;
   int currentIndex;
   User user, currentUser;
-  int difference;
+  double difference;
   User opponent;
   DatabaseMethods databaseMethods = new DatabaseMethods();
   CardController cardController = CardController();
@@ -104,7 +104,7 @@ class _SwipePageState extends State<SwipePage> {
                                   color: Colors.white,
                                 ),
                                 Text(
-                                  (difference / 1000).floor().toString() +
+                                  (difference / 1000).toStringAsFixed(2) +
                                       "km away",
                                   style: TextStyle(color: Colors.white),
                                 )
@@ -112,26 +112,6 @@ class _SwipePageState extends State<SwipePage> {
                             ),
                             SizedBox(
                               height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                iconWidget(
-                                    EvaIcons.flash, () {}, Colors.yellow),
-                                iconWidget(Icons.clear, () {
-                                  cardController.triggerLeft();
-                                }, Colors.blue),
-                                iconWidget(FontAwesomeIcons.solidHeart, () {
-                                  cardController.triggerRight();
-                                  databaseMethods.chooseUser(
-                                      currentUser.uid,
-                                      listUserToView[index].uid,
-                                      currentUser.name,
-                                      currentUser.photo);
-                                }, Colors.red),
-                                iconWidget(
-                                    EvaIcons.options2, () {}, Colors.white)
-                              ],
                             ),
                           ],
                         ),
@@ -153,6 +133,26 @@ class _SwipePageState extends State<SwipePage> {
                     },
                   ),
                 ),
+          SizedBox(
+            height: 100,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              iconWidget(Icons.clear, () {
+                cardController.triggerLeft();
+              }, Colors.blue),
+              iconWidget(FontAwesomeIcons.solidHeart, () {
+                cardController.triggerRight();
+                databaseMethods.chooseUser(
+                    currentUser.uid,
+                    listUserToView[currentIndex].uid,
+                    currentUser.name,
+                    currentUser.photo);
+              }, Colors.red),
+            ],
+          )
         ],
       ),
     );
@@ -164,7 +164,10 @@ class _SwipePageState extends State<SwipePage> {
         userLocation.longitude,
         oponentLocation.latitude,
         oponentLocation.longitude);
-    difference = distance.toInt();
+    setState(() {
+      difference = distance;
+    });
+    return distance;
   }
 
   getListUser() async {
@@ -209,28 +212,9 @@ class _SwipePageState extends State<SwipePage> {
             setState(() {
               listUserToView.add(element);
             });
-          } else
-            return Text(
-              "No One Here",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            );
-        } else
-          return Text(
-            "No One Here",
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          );
-      } else
-        return Text(
-          "No One Here",
-          style: TextStyle(
-              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
-        );
+          }
+        }
+      }
     });
   }
 
@@ -260,13 +244,24 @@ class _SwipePageState extends State<SwipePage> {
     });
   }
 
-  Widget iconWidget(icon, onTap, color) {
+  Widget iconWidget(IconData icon, Function onTap, Color color) {
     return GestureDetector(
-      onTap: onTap,
-      child: Icon(
-        icon,
-        color: color,
-      ),
-    );
+        onTap: onTap,
+        child: Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              border: Border.all(width: 1, color: Colors.blue),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 10, color: Colors.grey, offset: Offset(0, 5))
+              ]),
+          child: Icon(
+            icon,
+            color: color,
+          ),
+        ));
   }
 }
