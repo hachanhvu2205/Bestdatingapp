@@ -39,24 +39,39 @@ class _MatchUsersPageState extends State<MatchUsersPage> {
 
   Column buildList() {
     return Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                itemCount: listMatch.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.red[300],
-                        borderRadius: BorderRadius.circular(5),
+      children: <Widget>[
+        Expanded(
+          child: ListView.builder(
+            itemCount: listMatch.length,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.red[300],
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Row(
+                    children: [
+                      ClipOval(
+                        child: Container(
+                            width: 20,
+                            height: 20,
+                            child: Image.network('${listMatch[index].photo}')),
                       ),
-                      child: Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            '${listMatch[index].uid}',
+                            '${listMatch[index].name}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '${listMatch[index].age}',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -64,12 +79,14 @@ class _MatchUsersPageState extends State<MatchUsersPage> {
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        );
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }
