@@ -58,20 +58,37 @@ class DatabaseMethods {
     });
   }
 
-  getChats(String chatRoomId) async {
+  Future<Stream<QuerySnapshot>> getChats(
+      String currentUserId, String opponentId) async {
     return Firestore.instance
-        .collection("chatRoom")
-        .document(chatRoomId)
+        .collection("users")
+        .document(currentUserId)
         .collection("chats")
+        .document(opponentId)
+        .collection('messages')
         .orderBy('time')
         .snapshots();
   }
 
-  Future<void> addMessage(String chatRoomId, chatMessageData) {
+  Future<void> addMessage(
+      String userId, String opponentId, Map<String, dynamic> chatMessageData) {
     Firestore.instance
-        .collection("chatRoom")
-        .document(chatRoomId)
+        .collection("users")
+        .document(userId)
         .collection("chats")
+        .document(opponentId)
+        .collection('messages')
+        .add(chatMessageData)
+        .catchError((e) {
+      print(e.toString());
+    });
+
+    Firestore.instance
+        .collection("users")
+        .document(opponentId)
+        .collection("chats")
+        .document(userId)
+        .collection('messages')
         .add(chatMessageData)
         .catchError((e) {
       print(e.toString());
@@ -138,23 +155,6 @@ class DatabaseMethods {
     return _user;
   }
 
-  passUser(currentUserId, selectedUserId) async {
-    await Firestore.instance
-        .collection('users')
-        .document(selectedUserId)
-        .collection('chosenList')
-        .document(currentUserId)
-        .setData({});
-
-    await Firestore.instance
-        .collection('users')
-        .document(currentUserId)
-        .collection('chosenList')
-        .document(selectedUserId)
-        .setData({});
-    return getUser(currentUserId);
-  }
-
   Future<List> getChosenList(userId) async {
     List<String> chosenList = [];
     await Firestore.instance
@@ -180,11 +180,111 @@ class DatabaseMethods {
         .document(userId)
         .get()
         .then((user) {
-      currentUser.name = user['name'];
-      currentUser.photo = user['photoUrl'];
-      currentUser.gender = user['gender'];
+      currentUser.name = user['userName'];
+      currentUser.photo = user['image'];
+      currentUser.gender = user['userGender'];
       currentUser.interestedIn = user['interestedIn'];
     });
     return currentUser;
+  }
+
+  Stream<QuerySnapshot> getMatchedList(userId) {
+    return Firestore.instance
+        .collection('users')
+        .document(userId)
+        .collection('matchedList')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getSelectedList(userId) {
+    return Firestore.instance
+        .collection('users')
+        .document(userId)
+        .collection('selectedList')
+        .snapshots();
+  }
+
+  Future<User> getUserDetails(userId) async {
+    User _user = User();
+
+    await Firestore.instance
+        .collection('users')
+        .document(userId)
+        .get()
+        .then((user) {
+      _user.uid = user.documentID;
+      _user.name = user['userName'];
+      _user.photo = user['image'];
+      _user.age = user['userAge'];
+      _user.location = user['location'];
+      _user.gender = user['userGender'];
+      _user.interestedIn = user['interestedIn'];
+    });
+
+    return _user;
+  }
+
+  // Future openChat(currentUserId, selectedUserId) async {
+  //   await Firestore.instance
+  //       .collection('users')
+  //       .document(currentUserId)
+  //       .collection('chats')
+  //       .document(selectedUserId)
+  //       .collection('messages').add(data)});
+
+  //   await Firestore.instance
+  //       .collection('users')
+  //       .document(selectedUserId)
+  //       .collection('chats')
+  //       .document(currentUserId)
+  //       .setData({'timestamp': DateTime.now()});
+
+  //   // await Firestore.instance
+  //   //     .collection('users')
+  //   //     .document(currentUserId)
+  //   //     .collection('matchedList')
+  //   //     .document(selectedUserId)
+  //   //     .delete();
+
+  //   // await Firestore.instance
+  //   //     .collection('users')
+  //   //     .document(selectedUserId)
+  //   //     .collection('matchedList')
+  //   //     .document(currentUserId)
+  //   //     .delete();
+  // }
+
+  void deleteUser(currentUserId, selectedUserId) async {
+    return await Firestore.instance
+        .collection('users')
+        .document(currentUserId)
+        .collection('selectedList')
+        .document(selectedUserId)
+        .delete();
+  }
+
+  Future selectUser(currentUserId, selectedUserId, currentUserName,
+      currentUserPhotoUrl, selectedUserName, selectedUserPhotoUrl) async {
+    deleteUser(currentUserId, selectedUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(currentUserId)
+        .collection('matchedList')
+        .document(selectedUserId)
+        .setData({
+      'userName': selectedUserName,
+      'image': selectedUserPhotoUrl,
+    });
+
+    return await Firestore.instance
+        .collection('users')
+        .document(selectedUserId)
+        .collection('matchedList')
+        .document(currentUserId)
+        .setData({
+      'userName': currentUserName,
+      'image': currentUserPhotoUrl,
+    });
   }
 }

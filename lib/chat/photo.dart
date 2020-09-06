@@ -1,48 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:Bestdatingapp/chat/const.dart';
+import 'package:extended_image/extended_image.dart';
 
-class FullPhoto extends StatelessWidget {
-  final String url;
+class PhotoWidget extends StatelessWidget {
+  final String photoLink;
 
-  FullPhoto({Key key, @required this.url}) : super(key: key);
+  const PhotoWidget({this.photoLink});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'FULL PHOTO',
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-      ),
-      body: FullPhotoScreen(url: url),
+    return ExtendedImage.network(
+      photoLink,
+      fit: BoxFit.cover,
+      cache: true,
+      enableSlideOutPage: true,
+      filterQuality: FilterQuality.high,
+      loadStateChanged: (ExtendedImageState state) {
+        switch (state.extendedImageLoadState) {
+          case LoadState.loading:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+            break;
+          case LoadState.completed:
+            return null;
+            break;
+          case LoadState.failed:
+            return GestureDetector(
+              child: Center(
+                child: Text("Reload"),
+              ),
+              onTap: () {
+                state.reLoadImage();
+              },
+            );
+            break;
+        }
+        return Text("");
+      },
     );
-  }
-}
-
-class FullPhotoScreen extends StatefulWidget {
-  final String url;
-
-  FullPhotoScreen({Key key, @required this.url}) : super(key: key);
-
-  @override
-  State createState() => FullPhotoScreenState(url: url);
-}
-
-class FullPhotoScreenState extends State<FullPhotoScreen> {
-  final String url;
-
-  FullPhotoScreenState({Key key, @required this.url});
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(child: PhotoView(imageProvider: NetworkImage(url)));
   }
 }
