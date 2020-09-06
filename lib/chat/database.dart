@@ -58,20 +58,37 @@ class DatabaseMethods {
     });
   }
 
-  getChats(String chatRoomId) async {
+  Future<Stream<QuerySnapshot>> getChats(
+      String currentUserId, String opponentId) async {
     return Firestore.instance
-        .collection("chatRoom")
-        .document(chatRoomId)
+        .collection("users")
+        .document(currentUserId)
         .collection("chats")
+        .document(opponentId)
+        .collection('messages')
         .orderBy('time')
         .snapshots();
   }
 
-  Future<void> addMessage(String chatRoomId, chatMessageData) {
+  Future<void> addMessage(
+      String userId, String opponentId, Map<String, dynamic> chatMessageData) {
     Firestore.instance
-        .collection("chatRoom")
-        .document(chatRoomId)
+        .collection("users")
+        .document(userId)
         .collection("chats")
+        .document(opponentId)
+        .collection('messages')
+        .add(chatMessageData)
+        .catchError((e) {
+      print(e.toString());
+    });
+
+    Firestore.instance
+        .collection("users")
+        .document(opponentId)
+        .collection("chats")
+        .document(userId)
+        .collection('messages')
         .add(chatMessageData)
         .catchError((e) {
       print(e.toString());
@@ -207,35 +224,35 @@ class DatabaseMethods {
     return _user;
   }
 
-  Future openChat(currentUserId, selectedUserId) async {
-    await Firestore.instance
-        .collection('users')
-        .document(currentUserId)
-        .collection('chats')
-        .document(selectedUserId)
-        .setData({'timestamp': DateTime.now()});
+  // Future openChat(currentUserId, selectedUserId) async {
+  //   await Firestore.instance
+  //       .collection('users')
+  //       .document(currentUserId)
+  //       .collection('chats')
+  //       .document(selectedUserId)
+  //       .collection('messages').add(data)});
 
-    await Firestore.instance
-        .collection('users')
-        .document(selectedUserId)
-        .collection('chats')
-        .document(currentUserId)
-        .setData({'timestamp': DateTime.now()});
+  //   await Firestore.instance
+  //       .collection('users')
+  //       .document(selectedUserId)
+  //       .collection('chats')
+  //       .document(currentUserId)
+  //       .setData({'timestamp': DateTime.now()});
 
-    await Firestore.instance
-        .collection('users')
-        .document(currentUserId)
-        .collection('matchedList')
-        .document(selectedUserId)
-        .delete();
+  //   // await Firestore.instance
+  //   //     .collection('users')
+  //   //     .document(currentUserId)
+  //   //     .collection('matchedList')
+  //   //     .document(selectedUserId)
+  //   //     .delete();
 
-    await Firestore.instance
-        .collection('users')
-        .document(selectedUserId)
-        .collection('matchedList')
-        .document(currentUserId)
-        .delete();
-  }
+  //   // await Firestore.instance
+  //   //     .collection('users')
+  //   //     .document(selectedUserId)
+  //   //     .collection('matchedList')
+  //   //     .document(currentUserId)
+  //   //     .delete();
+  // }
 
   void deleteUser(currentUserId, selectedUserId) async {
     return await Firestore.instance

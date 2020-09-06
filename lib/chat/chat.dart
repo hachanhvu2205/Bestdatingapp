@@ -1,3 +1,5 @@
+import 'package:Bestdatingapp/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Bestdatingapp/chat/listlike.dart';
@@ -12,8 +14,8 @@ import 'package:Bestdatingapp/chat/database.dart';
 import 'package:Bestdatingapp/chat/const.dart';
 
 class ChatPage extends StatefulWidget {
-  final String chatRoomId;
-  ChatPage({this.chatRoomId});
+  final User opponent;
+  ChatPage({this.opponent});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -22,33 +24,157 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   TextEditingController chatController = TextEditingController();
   Stream<QuerySnapshot> chats;
+  User currentUser;
+  ScrollController chatScrollController = ScrollController();
+
+  FocusNode chatNode = FocusNode();
+
+  @override
+  void initState() {
+    // WidgetsBinding.instance
+    //     .addPostFrameCallback((_) => chatScrollController.jumpTo(
+    //           chatScrollController.position.maxScrollExtent,
+    //         ));
+    initChatPage();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    chatNode.dispose();
+    chatScrollController.dispose();
+    super.dispose();
+  }
+
+  void chatScrollListener() {
+    if (chatNode.hasFocus || chatNode.hasPrimaryFocus) {
+      if (!chatScrollController.position.atEdge) {
+        chatScrollController.animateTo(
+            chatScrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.linear);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        title: Text(widget.opponent.name),
+        backgroundColor: Colors.pink,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
+                // height: MediaQuery.of(context).size.height * 0.8,
+                child: chatMessages(),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+              height: 60,
+              child: TextField(
+                controller: chatController,
+                focusNode: chatNode,
+                onTap: () {
+                  if (chatScrollController.position.pixels <
+                      chatScrollController.position.minScrollExtent) {
+                    Future.delayed(Duration(milliseconds: 500), () {
+                      chatScrollController.jumpTo(
+                        chatScrollController.position.maxScrollExtent,
+                      );
+                    });
+                  }
+                },
+                decoration: InputDecoration(
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      print(chatController.text);
+                      addMessage();
+                    },
+                    child: Icon(FontAwesomeIcons.paperPlane),
+                  ),
+                  hintText: 'Type...',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget chatMessages() {
     return StreamBuilder(
         stream: chats,
         builder: (context, snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) {
-                    return Messagesbubble(
-                      message: snapshot.data.documents[index].data["message"],
-                      sendByMe: Constants.myName ==
-                          snapshot.data.documents[index].data["sendBy"],
-                    );
-                  })
-              : Container();
+          if (snapshot.hasData) {
+            List reverseMessages = [];
+            reverseMessages.addAll(snapshot.data.documents);
+            reverseMessages = reverseMessages.reversed.toList();
+            return ListView.builder(
+                shrinkWrap: true,
+                reverse: true,
+                controller: chatScrollController,
+                itemCount: reverseMessages.length,
+                itemBuilder: (context, index) {
+                  return Messagesbubble(
+                    message: reverseMessages[index].data["message"],
+                    sendByMe: currentUser.name ==
+                        reverseMessages[index].data["sendBy"],
+                  );
+                });
+          } else
+            return Container();
         });
+  }
+
+  getCurrentUserData() async {
+    String email;
+    await FirebaseAuth.instance.currentUser().then((value) {
+      email = value.email;
+    });
+    String idDoc = await getid();
+    await Firestore.instance
+        .collection('users')
+        .document(idDoc)
+        .get()
+        .then((value) {
+      var info = value.data;
+      setState(() {
+        currentUser = User.fromJson(info);
+      });
+    });
+  }
+
+  Future<String> getid() async {
+    final user = await FirebaseAuth.instance.currentUser();
+    var idDoc = await Firestore.instance
+        .collection("users")
+        .where("userEmail", isEqualTo: user.email)
+        .getDocuments()
+        .then((value) => value.documents[0].documentID);
+    return (idDoc);
   }
 
   addMessage() {
     if (chatController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "sendBy": Constants.myName,
+        "sendBy": currentUser.name,
         "message": chatController.text,
         'time': DateTime.now().millisecondsSinceEpoch,
       };
 
-      DatabaseMethods().addMessage(widget.chatRoomId, chatMessageMap);
+      DatabaseMethods()
+          .addMessage(currentUser.uid, widget.opponent.uid, chatMessageMap);
 
       setState(() {
         chatController.text = "";
@@ -56,51 +182,15 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  @override
-  void initState() {
-    DatabaseMethods().getChats(widget.chatRoomId).then((val) {
+  initChatPage() async {
+    await getCurrentUserData();
+    DatabaseMethods()
+        .getChats(currentUser.uid, widget.opponent.uid)
+        .then((val) {
       setState(() {
         chats = val;
       });
     });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              
-              Container(
-                alignment: Alignment.center,
-                height: MediaQuery.of(context).size.height * 0.8,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                child: TextField(
-                  controller: chatController,
-                  decoration: InputDecoration(
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        print(chatController.text);
-                      },
-                      child: Icon(FontAwesomeIcons.paperPlane),
-                    ),
-                    hintText: 'Type...',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
 
