@@ -168,10 +168,7 @@ class _SwipePageState extends State<SwipePage> {
   }
 
   getListUser() async {
-    var dataQuery = await Firestore.instance
-        .collection('users')
-        .getDocuments()
-        .then((value) {
+    await Firestore.instance.collection('users').getDocuments().then((value) {
       value.documents.forEach((element) {
         User newUser = User.fromJson(element.data);
         listAllUser.add(newUser);

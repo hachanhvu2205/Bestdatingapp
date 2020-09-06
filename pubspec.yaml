@@ -42,6 +42,7 @@ dependencies:
   firebase_storage: ^3.1.6
   cloud_firestore: ^0.13.7
   eva_icons_flutter: ^2.0.1
+  extended_image: ^1.1.1
   auth: ^6.1.0
 
 dev_dependencies:
