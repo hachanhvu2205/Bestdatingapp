@@ -1,5 +1,6 @@
 import 'package:Bestdatingapp/chat/chat.dart';
 import 'package:Bestdatingapp/chat/matchUsers.dart';
+import 'package:Bestdatingapp/profile/info.dart';
 import 'package:Bestdatingapp/signin/login.dart';
 import 'package:Bestdatingapp/chat/listlike.dart';
 import 'package:Bestdatingapp/profile/profile.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LogInPage(),
+      home: SwipePage(),
     );
   }
 }

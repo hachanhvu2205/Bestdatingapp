@@ -36,7 +36,11 @@ class _ChatPageState extends State<ChatPage> {
                           snapshot.data.documents[index].data["sendBy"],
                     );
                   })
-              : Container();
+              : Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red[300]),
+                  ),
+                );
         });
   }
 
@@ -74,10 +78,9 @@ class _ChatPageState extends State<ChatPage> {
         child: Container(
           child: Column(
             children: <Widget>[
-              
               Container(
                 alignment: Alignment.center,
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: MediaQuery.of(context).size.height * 0.86,
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
