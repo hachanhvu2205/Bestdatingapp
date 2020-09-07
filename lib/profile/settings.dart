@@ -1,28 +1,36 @@
+import 'package:Bestdatingapp/profile/profile.dart';
 import 'package:Bestdatingapp/service.dart';
+import 'package:Bestdatingapp/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:Bestdatingapp/chat/database.dart';
 
 class SettingsPage extends StatefulWidget {
+  User currentUser;
+
+  SettingsPage({Key key, @required this.currentUser}) : super(key: key);
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  static var selectedAgeRange = RangeValues(18.0, 23.0);
-  static var value = 50.0;
-  var genderValue = -1;
+  var selectedAgeRange;
+  DatabaseMethods databaseMethods = new DatabaseMethods();
+  var value = 0;
+  int interestedIn = 0;
+  double maxDistance = 0;
+  int minAge = 0, maxAge = 0;
 
-  getDistanceValue(value) {
-    return value;
-  }
-
-  getLowerAgeValue(value) {
-    return value;
-  }
-
-  getHigherAgeValue(value) {
-    return value;
+  @override
+  void initState() {
+    minAge = widget.currentUser.minAge;
+    maxAge = widget.currentUser.maxAge;
+    maxDistance = widget.currentUser.maxDistance.toDouble();
+    interestedIn = widget.currentUser.interestedIn == 'Male' ? 0 : 1;
+    selectedAgeRange = RangeValues(minAge.toDouble(), maxAge.toDouble());
+    super.initState();
   }
 
   @override
@@ -50,12 +58,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         'Maximum Distance',
                         style: TextStyle(color: Colors.red[300]),
                       ),
-                      Text('${value.floor()} Km'),
+                      Text('${maxDistance.floor()} Km'),
                       Slider(
-                        value: value,
-                        onChanged: (newValue) {
+                        value: maxDistance,
+                        onChanged: (value) {
                           setState(() {
-                            value = newValue;
+                            maxDistance = value;
                           });
                         },
                         max: 300.0,
@@ -81,10 +89,12 @@ class _SettingsPageState extends State<SettingsPage> {
                         onChanged: (RangeValues newRange) {
                           setState(() {
                             selectedAgeRange = newRange;
+                            minAge = newRange.start.floor();
+                            maxAge = newRange.end.floor();
                           });
                         },
                         min: 18.0,
-                        max: 30.0,
+                        max: 50.0,
                       ),
                     ],
                   ),
@@ -105,10 +115,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         children: <Widget>[
                           Radio(
                             value: 0,
-                            groupValue: genderValue,
+                            groupValue: interestedIn,
                             onChanged: (value) {
                               setState(() {
-                                genderValue = value;
+                                interestedIn = value;
                               });
                             },
                           ),
@@ -118,10 +128,10 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                           Radio(
                             value: 1,
-                            groupValue: genderValue,
+                            groupValue: interestedIn,
                             onChanged: (value) {
                               setState(() {
-                                genderValue = value;
+                                interestedIn = value;
                               });
                             },
                           ),
@@ -138,9 +148,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   height: 50,
                   child: FlatButton(
                     onPressed: () async {
-                      print('Logged out');
+                      var userId = await databaseMethods.getid();
+                      var data = {
+                        "min_age": minAge,
+                        "max_age": maxAge,
+                        "max_distance": maxDistance.floor(),
+                        "interestedIn": getGender(interestedIn),
+                      };
+                      await databaseMethods.update(data);
+
+                      Navigator.pop(context, true);
                     },
-                    child: Text('Log Out'),
+                    child: Text('Save'),
                   ),
                 ),
               ],
@@ -149,5 +168,13 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  getGender(genderValue) {
+    if (genderValue == 0) {
+      return 'Male';
+    } else if (genderValue == 1) {
+      return 'Female';
+    }
   }
 }

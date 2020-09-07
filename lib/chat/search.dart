@@ -63,11 +63,7 @@ class _SearchState extends State<Search> {
     databaseMethods.addChatRoom(chatRoom, chatRoomId);
 
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ChatPage(
-                  chatRoomId: chatRoomId,
-                )));
+        context, MaterialPageRoute(builder: (context) => ChatPage()));
   }
 
   Widget userTile(String userName, String userEmail) {

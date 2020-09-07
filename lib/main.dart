@@ -1,6 +1,4 @@
 import 'package:Bestdatingapp/chat/chat.dart';
-import 'package:Bestdatingapp/chat/matchUsers.dart';
-import 'package:Bestdatingapp/profile/info.dart';
 import 'package:Bestdatingapp/signin/login.dart';
 import 'package:Bestdatingapp/chat/listlike.dart';
 import 'package:Bestdatingapp/profile/profile.dart';
@@ -80,7 +78,7 @@ class _MainState extends State<Main> {
                 physics: NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   SwipePage(),
-                  MatchUsersPage(),
+                  MessagePage(),
                   ProfilePage(),
                 ],
               ),

@@ -21,7 +21,7 @@ class _SwipePageState extends State<SwipePage> {
   bool isNope = false;
   int currentIndex;
   User user, currentUser;
-  int difference;
+  double difference;
   User opponent;
   DatabaseMethods databaseMethods = new DatabaseMethods();
   CardController cardController = CardController();
@@ -50,8 +50,15 @@ class _SwipePageState extends State<SwipePage> {
           SizedBox(
             height: 30,
           ),
-          listAllUser.length == 0
-              ? Container()
+          listUserToView.length == 0
+              ? Expanded(
+                  child: Center(
+                    child: Text(
+                      'No user to show',
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ),
+                )
               : Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
@@ -86,52 +93,42 @@ class _SwipePageState extends State<SwipePage> {
                               ),
                             ),
                             Container(
-                              alignment: Alignment.bottomLeft,
                               padding: EdgeInsets.all(10),
-                              child: Text(
-                                " " +
-                                    '${listUserToView[index].name}' +
-                                    ',' +
-                                    '${getAge(listUserToView[index].age)}',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 40),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Row(children: [
+                                    Text(
+                                      '${listUserToView[index].name}' +
+                                          ',' +
+                                          '${getAge(listUserToView[index].age)}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 30,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ]),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        (difference / 1000).toStringAsFixed(2) +
+                                            "km away",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  (difference / 1000).floor().toString() +
-                                      "km away",
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              ],
                             ),
                             SizedBox(
                               height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                iconWidget(
-                                    EvaIcons.flash, () {}, Colors.yellow),
-                                iconWidget(Icons.clear, () {
-                                  cardController.triggerLeft();
-                                }, Colors.blue),
-                                iconWidget(FontAwesomeIcons.solidHeart, () {
-                                  cardController.triggerRight();
-                                  databaseMethods.chooseUser(
-                                      currentUser.uid,
-                                      listUserToView[index].uid,
-                                      currentUser.name,
-                                      currentUser.photo);
-                                }, Colors.red),
-                                iconWidget(
-                                    EvaIcons.options2, () {}, Colors.white)
-                              ],
                             ),
                           ],
                         ),
@@ -139,12 +136,21 @@ class _SwipePageState extends State<SwipePage> {
                     },
                     cardController: cardController,
                     swipeUpdateCallback:
-                        (DragUpdateDetails details, Alignment align) {
+                        (DragUpdateDetails details, Alignment align) async {
                       /// Get swiping card's alignment
                       if (align.x < 0) {
-                        //Card is LEFT swiping
+                        // setState(() {
+                        //   listUserToView.removeAt(currentIndex);
+                        // });
                       } else if (align.x > 0) {
-                        //Card is RIGHT swiping
+                        // setState(() {
+                        //   listUserToView.removeAt(currentIndex);
+                        // });
+                        await databaseMethods.chooseUser(
+                            currentUser.uid,
+                            listUserToView[currentIndex].uid,
+                            currentUser.name,
+                            currentUser.photo);
                       }
                     },
                     swipeCompleteCallback:
@@ -153,6 +159,29 @@ class _SwipePageState extends State<SwipePage> {
                     },
                   ),
                 ),
+          SizedBox(
+            height: 100,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              iconWidget(Icons.clear, () {
+                cardController.triggerLeft();
+              }, Colors.blue),
+              iconWidget(FontAwesomeIcons.solidHeart, () async {
+                cardController.triggerRight();
+                await databaseMethods.chooseUser(
+                    currentUser.uid,
+                    listUserToView[currentIndex].uid,
+                    currentUser.name,
+                    currentUser.photo);
+              }, Colors.red),
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          )
         ],
       ),
     );
@@ -164,7 +193,10 @@ class _SwipePageState extends State<SwipePage> {
         userLocation.longitude,
         oponentLocation.latitude,
         oponentLocation.longitude);
-    difference = distance.toInt();
+
+    difference = distance;
+
+    return distance;
   }
 
   getListUser() async {
@@ -174,7 +206,7 @@ class _SwipePageState extends State<SwipePage> {
         listAllUser.add(newUser);
       });
     });
-    filterUserToView(listAllUser);
+    await filterUserToView(listAllUser);
   }
 
   getAge(Timestamp birthDate) {
@@ -206,31 +238,11 @@ class _SwipePageState extends State<SwipePage> {
         if (distance <= currentUser.maxDistance) {
           if (oponentAge >= currentUser.minAge &&
               oponentAge <= currentUser.maxAge) {
-            setState(() {
-              listUserToView.add(element);
-            });
-          } else
-            return Text(
-              "No One Here",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            );
-        } else
-          return Text(
-            "No One Here",
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          );
-      } else
-        return Text(
-          "No One Here",
-          style: TextStyle(
-              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
-        );
+            listUserToView.add(element);
+          }
+        }
+      }
+      setState(() {});
     });
   }
 
@@ -258,14 +270,27 @@ class _SwipePageState extends State<SwipePage> {
       var info = value.data;
       currentUser = User.fromJson(info);
     });
+    setState(() {});
   }
 
-  Widget iconWidget(icon, onTap, color) {
+  Widget iconWidget(IconData icon, Function onTap, Color color) {
     return GestureDetector(
       onTap: onTap,
-      child: Icon(
-        icon,
-        color: color,
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            border: Border.all(width: 1, color: Colors.blue),
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 10, color: Colors.grey, offset: Offset(0, 5))
+            ]),
+        child: Icon(
+          icon,
+          color: color,
+        ),
       ),
     );
   }
