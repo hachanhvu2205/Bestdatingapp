@@ -1,6 +1,7 @@
 import 'package:Bestdatingapp/profile/addMedia.dart';
 import 'package:Bestdatingapp/profile/info.dart';
 import 'package:Bestdatingapp/profile/settings.dart';
+import 'package:Bestdatingapp/user.dart';
 import 'package:auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String name = '';
   Timestamp age;
+  String photoUrl;
+  User currentUser;
 
   void getInfo() async {
     var user = await FirebaseAuth.instance.currentUser();
@@ -28,15 +31,43 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         name = value.documents[0].data["userName"];
         age = value.documents[0].data['userAge'];
+        photoUrl = value.documents[0].data['image'];
       });
     });
 
     print('name: ${name}');
   }
 
+  Future<String> getid() async {
+    final user = await FirebaseAuth.instance.currentUser();
+    var idDoc = await Firestore.instance
+        .collection("users")
+        .where("userEmail", isEqualTo: user.email)
+        .getDocuments()
+        .then((value) => value.documents[0].documentID);
+    return (idDoc);
+  }
+
+  getCurrentUserData() async {
+    String email;
+    await FirebaseAuth.instance.currentUser().then((value) {
+      email = value.email;
+    });
+    String idDoc = await getid();
+    await Firestore.instance
+        .collection('users')
+        .document(idDoc)
+        .get()
+        .then((value) {
+      var info = value.data;
+      currentUser = User.fromJson(info);
+    });
+  }
+
   @override
   void initState() {
     getInfo();
+    getCurrentUserData();
     super.initState();
   }
 
@@ -63,20 +94,31 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(
                             height: 20,
                           ),
-                          ClipOval(
-                            child: Container(
-                              height: 150,
-                              width: 150,
-                              child: Image.asset('assets/asset-1.jpg'),
-                            ),
-                          ),
-                          Text(
-                            name +
-                                "," +
-                                (DateTime.now().year - age.toDate().year)
-                                    .toString(),
-                            style: TextStyle(fontSize: 20, color: Colors.black),
-                          ),
+                          photoUrl == null
+                              ? Container()
+                              : ClipOval(
+                                  child: Container(
+                                    height: 150,
+                                    width: 150,
+                                    child: Center(
+                                      child: FadeInImage.assetNetwork(
+                                        image: photoUrl,
+                                        placeholder: 'assets/icon-2.png',
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                          age == null
+                              ? Container()
+                              : Text(
+                                  name +
+                                      "," +
+                                      (DateTime.now().year - age.toDate().year)
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
                           SizedBox(
                             height: 40,
                           ),
@@ -89,12 +131,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: <Widget>[
                                   ClipOval(
                                     child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SettingsPage()));
+                                      onTap: () async {
+                                        var resp = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SettingsPage(
+                                              currentUser: currentUser,
+                                            ),
+                                          ),
+                                        );
+                                        if (resp == true) {
+                                          getInfo();
+                                          getCurrentUserData();
+                                        }
                                       },
                                       child: Container(
                                         height: 50,
