@@ -85,44 +85,50 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                getImage(ImageSource.gallery);
-              },
-              child: imageSetting(),
-            ),
-            // update name
-            nameSetting(context),
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  getImage(ImageSource.gallery);
+                },
+                child: imageSetting(),
+              ),
+              // update name
+              nameSetting(context),
 
-            GestureDetector(
-              onTap: () {
-                DatePicker.showDatePicker(
-                  context,
-                  showTitleActions: true,
-                  minTime: DateTime(1900, 1, 1),
-                  maxTime: DateTime.now().subtract(Duration(days: 6939)),
-                  onConfirm: (date) {
-                    setState(() {
-                      birthday = Timestamp.fromDate(date);
-                    });
-                  },
-                );
-              },
-              child: Container(
-                child: Text(
-                  "Enter Birthday",
-                  style: TextStyle(
-                    color: Colors.black,
+              GestureDetector(
+                onTap: () {
+                  DatePicker.showDatePicker(
+                    context,
+                    showTitleActions: true,
+                    minTime: DateTime(1900, 1, 1),
+                    maxTime: DateTime.now().subtract(Duration(days: 6939)),
+                    onConfirm: (date) {
+                      setState(() {
+                        birthday = Timestamp.fromDate(date);
+                      });
+                    },
+                  );
+                },
+                child: Container(
+                  child: Text(
+                    "Click to Enter Birthday",
+                    style: TextStyle(
+                      color: Colors.red[300],
+                    ),
                   ),
                 ),
               ),
-            ),
-            genderSetting(context),
-            interestedInSetting(context),
-            submitSetting(context),
-          ],
+              SizedBox(
+                height: 30,
+              ),
+              genderSetting(context),
+              interestedInSetting(context),
+              submitSetting(context),
+            ],
+          ),
         ),
       ),
     );
@@ -153,7 +159,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
 
   Container genderSetting(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
       color: Colors.white,
       width: MediaQuery.of(context).size.width,
       height: 100,
@@ -163,7 +169,11 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
             'Choose gender',
             style: TextStyle(color: Colors.red[300]),
           ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Radio(
                 value: 0,
@@ -198,7 +208,7 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
 
   Container interestedInSetting(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
       color: Colors.white,
       width: MediaQuery.of(context).size.width,
       height: 100,
@@ -208,7 +218,11 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
             'Interested In',
             style: TextStyle(color: Colors.red[300]),
           ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Radio(
                 value: 0,
@@ -259,8 +273,6 @@ class _UpdateInfoPageState extends State<UpdateInfoPage> {
               onFieldSubmitted: (value) {},
               decoration: InputDecoration(
                 hintText: 'Name...',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
               ),
             ),
           ),
