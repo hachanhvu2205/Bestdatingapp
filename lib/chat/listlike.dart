@@ -326,9 +326,11 @@ class _MessagePageState extends State<MessagePage> {
         .get()
         .then((value) {
       var info = value.data;
+
       currentUser = User.fromJson(info);
+    }).whenComplete(() {
+      setState(() {});
     });
-    setState(() {});
   }
 
   Widget iconWidget(icon, onTap, color) {

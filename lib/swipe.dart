@@ -159,8 +159,8 @@ class _SwipePageState extends State<SwipePage> {
                     },
                   ),
                 ),
-          SizedBox(
-            height: 100,
+          Expanded(
+            child: Container(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -235,15 +235,17 @@ class _SwipePageState extends State<SwipePage> {
           await getDifference(currentUser.location, element.location);
       int oponentAge = getAge(element.age);
       if (element.gender == currentUser.interestedIn) {
-        if (distance <= currentUser.maxDistance) {
+        if (distance <= currentUser.maxDistance * 1000) {
           if (oponentAge >= currentUser.minAge &&
               oponentAge <= currentUser.maxAge) {
-            listUserToView.add(element);
+            if (!(element.uid == currentUser.uid)) {
+              listUserToView.add(element);
+            }
           }
         }
       }
-      setState(() {});
     });
+    setState(() {});
   }
 
   Future<String> getid() async {

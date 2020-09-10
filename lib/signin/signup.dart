@@ -60,7 +60,7 @@ class _SignUpPageState extends State<SignUpPage> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfilePage()));
+                      MaterialPageRoute(builder: (context) => LogInPage()));
                 },
                 child: Align(
                   alignment: Alignment.bottomCenter,

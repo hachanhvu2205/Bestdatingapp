@@ -16,12 +16,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  var selectedAgeRange;
+  RangeValues selectedAgeRange = RangeValues(0, 1);
   DatabaseMethods databaseMethods = new DatabaseMethods();
   var value = 0;
   int interestedIn = 0;
   double maxDistance = 0;
-  int minAge = 0, maxAge = 0;
+  int minAge = 0, maxAge = 1;
 
   @override
   void initState() {
@@ -160,6 +160,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.pop(context, true);
                     },
                     child: Text('Save'),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 50,
+                  child: FlatButton(
+                    onPressed: () {},
+                    child: Text('Log Out'),
                   ),
                 ),
               ],
