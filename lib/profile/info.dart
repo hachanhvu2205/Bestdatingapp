@@ -45,8 +45,6 @@ class _InfoPageState extends State<InfoPage> {
                             },
                             decoration: InputDecoration(
                               hintText: 'Bio...',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5)),
                             ),
                           ),
                         ),
@@ -73,8 +71,6 @@ class _InfoPageState extends State<InfoPage> {
                             },
                             decoration: InputDecoration(
                               hintText: 'Name...',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5)),
                             ),
                           ),
                         ),
@@ -102,8 +98,6 @@ class _InfoPageState extends State<InfoPage> {
                               },
                               decoration: InputDecoration(
                                 hintText: 'Age...',
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5)),
                               ),
                             ),
                           ),
